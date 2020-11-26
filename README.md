@@ -1,81 +1,80 @@
-# Brunch framework
+# Brunch framework（Chinese Simplified Translated Readme）
 
-## Overview
+## 概述
 
-First of all, thanks goes to project Croissant, the swtpm maintainer and the Chromebrew framework for their work which was actively used when creating this project.
+首先，感谢swtpm的维护者Project Croissant，以及他们的Chromebrew框架。本项目在创建时大量采用了他们的辛劳成果。
 
-The Brunch framework purpose is to create a generic x86_64 ChromeOS image from an official recovery image. To do so, it uses a 1GB ROOTC partition (containing a custom kernel, an initramfs, the swtpm binaries, userspace patches and config files) and a specific EFI partition to boot from it.
+Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用的X86_64镜像。其使用了1GB的ROOTC分区（包含一个定制的内核，一个initramfs，swtpm二进制，用户空间补丁和配置文件）和一个特定的EFI分区用于引导。
 
-**Warning: As Brunch is not the intended way for ChromeOS to work, at some point a ChromeOS script could potentially behave badly with Brunch and delete data unexpectedly (even on non-ChromeOS partitions). Also, ChromeOS recovery images include device firmware updates that a close enough device might potentially accept and get flashed with the wrong firmware. By installing Brunch you agree to take those risks and I cannot be held responsible for anything bad that would happen to your device including data loss.
-It is therefore highly recommended to only use this framework on a device which does not contain any sensitive data and to keep non-sensitive data synced with a cloud service.**
+**警告：Brunch并非ChromeOS默认支持的工作方式，某些情况下，Brunch下的ChromeOS的脚本运行可能会出现问题，并有可能会意外删除你的数据（甚至非ChromeOS分区的数据）。同时，ChromeOS恢复镜像中包含了可能与其他设备非常相似的固件更新，可能会导致这个相似的设备接受并错误地刷入。若你选择安装Brunch，则你同意承担上述所有风险，并且本人不对你机器工作异常、数据丢失等后果进行负责。因此，我们建议仅在没有任何敏感数据的设备上安装Brunch框架，并且建议将非敏感的数据也备份到云端。**
 
-## Hardware support and added features
+## 硬件支持和新增的功能
 
-Hardware support is highly dependent on the general Linux kernel hardware compatibility. As such only Linux supported hardware will work and the same specific kernel command line options recommended for your device should be passed through the GRUB bootloader (see "Modify the GRUB bootloader" section).
+硬件支持高度依赖通用Linux内核中的硬件兼容性。因此，只有支持Linux的硬件才能够正常工作，并且针对你设备所使用的特定的内核命令应该能够通过GRUB引导程序（参阅“修改GRUB引导程序”一节）。
 
-Base hardware compatibility:
-- x86_64 computers with UEFI boot support,
-- Intel hardware (CPU and GPU) starting from 1st generation "Nehalem" (refer to https://en.wikipedia.org/wiki/Intel_Core),
-- AMD Stoney Ridge (refer to https://en.wikipedia.org/wiki/List_of_AMD_accelerated_processing_units), only with "grunt" recovery image (older AMD CPU and Ryzen models are not yet supported),
-- Nvidia graphic cards are also not supported.
+基础硬件兼容性：
+- x86_64电脑并支持UEFI引导；
+- 英特尔硬件（CPU和GPU），从第1代“Nehalem”架构开始（即第一代Core i系列处理器，参见https://en.wikipedia.org/wiki/Intel_Core ） ；
+- AMD Stoney Ridge（第7代APU，参见 https://en.wikipedia.org/wiki/List_of_AMD_accelerated_processing_units ），仅能使用“grunt”恢复镜像（更老的处理器和最新的锐龙处理器暂不支持）；
+- Nvidia独立显卡也不受支持。
 
-Specific procedure for BIOS/MBR devices: Follow the same procedure as described below but after extracting the brunch release, extract in the same folder the "mbr_suport.tar.gz" package that you will find in this branch (master).
+针对BIOS/MBR引导的特别步骤：参照下述步骤进行操作，但在解压Brunch后，请将在本branch（master）中的“mbr_support.tar.gz”也解压进同一目录。
 
-Specific hardware support:
-- sensors: an experimental patch aims to allow intel ISH accelerometer and light sensors through a custom kernel module,
-- Microsoft Surface devices: dedicated kernel patches are included.
+特定硬件支持：
+- 传感器：采用了一个实验性的补丁来允许英特尔重力加速度传感器和光线传感器工作；
+- Microsoft Surface设备：独立的内核补丁已包含在内。
 
-Additional features:
-- nano text editor
-- qemu (with spice support)
+附加功能：
+- nano文本编辑器
+- qemu（支持spice）
 
-## ChromeOS recovery images
+## ChromeOS恢复镜像
 
-2 types of ChromeOS recovery images exist and use different device configuration mechanisms:
-- non-unibuild images: configured for single device configurations like eve (Google Pixelbook) and nocturne (Google Pixel Slate) for example.
-- unibuild images: intended to manage multiple devices through the use of the CrosConfig tool.
+存在2种ChromeOS的恢复镜像，并且它们使用了不同的设备配置机制：
+- 已编译镜像：为诸如eve（Google Pixelboot）和nocturne（Google Pixel Slate）这样的单一设备配置。
+- 未编译镜像：通过CrosConfig工具，可配置用于多个设备的镜像。
 
-Contrarily to the Croissant framework which mostly supports non-unibuilds images (configuration and access to android apps), Brunch should work with both but will provide better hardware support for unibuild images.
+与基本支持已编译镜像（的配置和Android程序访问）的Croissant框架相反，Brunch在使用了未编译镜像的情况下，理应也能让其两者正常运行，并提供更好的硬件兼容性。
 
-Currently:
-- "rammus" is the recommended image for devices with 4th generation Intel CPU and newer.
-- "samus" is the recommended image for devices with 3rd generation Intel CPU and older.
-- "grunt" is the image to use if you have supported AMD hardware.
+目前来说：
+- “rammus”镜像推荐在第4代酷睿及更新的英特尔处理器上使用。
+- “samus”镜像推荐在第3代酷睿及更老的英特尔处理器上使用。
+- “grunt”镜像仅在你拥有AMD硬件时使用。
 
-If you have a doubt on the recovery image to use, the "brunch-toolkit" from WesBosch has a compatibility check feature which detects the recovery image to use:
+如果你不确定使用什么恢复镜像，WesBosch的“brunch-toolkit”项目拥有一个兼容性检查，能检测你应使用的镜像：
 https://github.com/WesBosch/brunch-toolkit
 
-ChromeOS recovery images can be downloaded from: https://cros-updates-serving.appspot.com/ or https://cros.tech/
+ChromeOS恢复镜像可以从https://cros-updates-serving.appspot.com/ 或者 https://cros.tech/ 下载
 
-# Install instructions
+# 安装方式
 
-You can install ChromeOS on a USB flash drive / SD card (16GB minimum) or as an image on your hard disk for dual booting (14GB of free space needed).
+你可以将ChromeOS安装在U盘/SD卡（最少16GB）中，或者将镜像安装在你的硬盘里，用于双系统引导（需要至少14GB可用空间）。
 
-## Install ChromeOS from Linux (the easiest way)
+## 在Linux下安装ChromeOS（最简单）
 
-### Requirements
+### 需求
 
-- root access.
-- `pv`, `tar` and `cgpt` packages/binaries.
+- root权限。
+- `pv`，`tar`和`cgpt`程序包/二进制。
 
-### Install ChromeOS on a USB flash drive / SD card / HDD (full disk install / single boot)
+### 在U盘/SD卡/硬盘上全盘安装ChromeOS（单系统引导）
 
-1. Download the ChromeOS recovery image and extract it.
-2. Download the Brunch release corresponding to the ChromeOS recovery image version you have downloaded (from the GitHub release section).
-3. Open a terminal, navigate to the directory containing the package.
-4. Extract it: 
+1. 下载ChromeOS恢复镜像并解压。
+2. 下载与ChromeOS版本对应的Brunch框架（参见Release页面）。
+3. 打开终端，进入Brunch压缩包所在目录。
+4. 解压：
 ```
 tar zxvf brunch_< version >.tar.gz
 ```
-5. Identify your USB flash drive / SD card / HDD device name e.g. /dev/sdX (Be careful here as the installer will erase all data on the target drive)
-6. Install ChromeOS on the USB flash drive / SD card / HDD:
+5. 查看你U盘/SD卡/硬盘的名称，例如/dev/sdX（不含“X”后的数字。必须十分小心，因为安装程序会删除该设备的所有文件）
+6. 将ChromeOS安装在你的U盘/SD卡/硬盘上（请删除所有“<>”注释内容）：
 ```
-sudo bash chromeos-install.sh -src < path to the ChromeOS recovery image > -dst < your USB flash drive / SD card device. e.g. /dev/sdX >
+sudo bash chromeos-install.sh -src < ChromOS恢复镜像所在位置 > -dst < 你U盘/SD卡/硬盘的名称，例如/dev/sdX >
 ```
-7. Reboot your computer and boot from the USB flash drive / SD card / HDD (refer to your computer manufacturer's online resources).
-8. (Secure Boot only) A blue screen saying "Verfification failed: (15) Access Denied" will appear upon boot and you will have to enroll the secure boot key by selecting "OK->Enroll key from disk->EFI-SYSTEM->brunch.der->Continue". Reboot your computer and boot again from the USB flash drive / SD card.
+7. 重启电脑，并引导至U盘/SD卡/硬盘（参见电脑制造商的说明）。
+8. （仅针对开启了Secure Boot安全引导的用户）若出现蓝屏并提示 "Verfification failed: (15) Access Denied"，则你需要将安全引导的密钥导入。选择“OK->Enroll key from disk->EFI-SYSTEM->brunch.der->Continue”，然后再次重启并引导。
 
-The GRUB menu should appear, select ChromeOS and after a few minutes (the Brunch framework is building itself on the first boot), you should be greeted by ChromeOS startup screen. You can now start using ChromeOS.
+此时GRUB菜单应该会出现，选择ChromeOS，几分钟后（期间Brunch框架正在为首次启动自行编译），你应该就能看到ChromeOS的欢迎界面，并可以开始使用了。
 
 ### Dual Boot ChromeOS from your HDD
 
@@ -203,37 +202,37 @@ Note: Even if you boot from GRUB on your HDD, if you have a ChromeOS USB flash d
 
 The GRUB menu should appear, select ChromeOS and after a few minutes (the Brunch framework is building itself on the first boot), you should be greeted by ChromeOS startup screen. You can now start using ChromeOS.
 
-# Optional steps
+# 可选步骤
 
-## Framework options
+## 框架选项
 
-Some options can be passed through the kernel command lines to activate specific features which might be dangerous or not work from everyone:
-- "enable_updates": allow native ChromeOS updates (use at your own risk: ChromeOS will be updated but not the Brunch framework/kernel which might render your ChromeOS install unstable or even unbootable),
-- "android_init_fix": alternative init to support devices on which the android container fails to start with the standard init.
-- "mount_internal_drives": allows automatic mounting of HDD partitions in ChromeOS (android media server will scan those drives which will cause high CPU usage until it has finished, it might take hours depending on your data), partition label will be used if it exists,
-- "broadcom_wl": enable this option if you need the broadcom_wl module,
-- "iwlwifi_backport": enable this option if your intel wireless card is not supported natively in the kernel,
-- "rtl8188eu": enable this option if you have a rtl8188eu wireless card,
-- "rtl8723bu": enable this option if you have a rtl8723bu wireless card,
-- "rtl8723de": enable this option if you have a rtl8723de wireless card,
-- "rtl8821ce": enable this option if you have a rtl8821ce wireless card,
-- "rtbth": enable this option if you have a RT3290/RT3298LE bluetooth device,
-- "acpi_power_button": try this option if long pressing the power button does not display the power menu,
-- "alt_touchpad_config": try this option if you have touchpad issues,
-- "alt_touchpad_config2": another option to try if you have touchpad issues,
-- "disable_intel_hda": some Chromebooks need to blacklist the snd_hda_intel module, use this option to reproduce it,
-- "internal_mic_fix": allows to forcefully enable internal mic on some devices,
-- "asus_c302": applies asus c302 specific firmwares and fixes,
-- "baytrail_chromebook": applies baytrail chromebooks specific audio fixes,
-- "sysfs_tablet_mode": allow to control tablet mode from sysfs (`echo 1 | sudo tee /sys/bus/platform/devices/tablet_mode_switch.0/tablet_mode` to acivate it or use 0 to disable it),
-- "force_tablet_mode": same as above except tablet mode is enabled by default on boot,
-- "suspend_s3": disable suspend to idle (S0ix) and use S3 suspend instead,
-- "advanced_als": default ChromeOS auto-brightness is very basic (https://chromium.googlesource.com/chromiumos/platform2/+/master/power_manager/docs/screen_brightness.md). This option activates more auto-brightness levels (based on the Google Pixel Slate implementation).
+某些选项的特定功能可以通过内核命令行来激活，但这些功能也有可能存在风险，或不适用于所有用户：
+- "enable_updates"：允许ChromeOS系统更新（请自行承担风险：ChromeOS会被升级，但Brunch框架/内核并不会。这可能会让你的ChromeOS工作不稳定甚至无法引导）；
+- "android_init_fix"：代替用的初始化，用于支持某些设备无法正确启动其中一种Android容器时进行切换；
+- "mount_internal_drives"：允许在ChromeOS下自动挂载硬盘分区（Android媒体服务将会检测这些设备，在其结束前将会造成高CPU占用。此过程依照数据的实际情况，有可能会花费数小时不等），若分区存在卷标，则会被使用；
+- "broadcom_wl"：若你的设备存在博通无线网络设备，则启用；
+- "iwlwifi_backport"：若内核无法原生支持你的英特尔无线网络设备，则启用；
+- "rtl8188eu"：若你的设备使用了rtl8188eu无线网卡，则启用；
+- "rtl8723bu": 若你的设备使用了rtl8723bu无线网卡，则启用；
+- "rtl8723de": 若你的设备使用了rtl8723de无线网卡，则启用；
+- "rtl8821ce": 若你的设备使用了rtl8821ce无线网卡，则启用；
+- "rtbth"：若你的设备使用了RT3290/RT3298LE蓝牙设备，则启用；
+- "acpi_power_button"：若长按电源按钮不显示电源菜单，则尝试使用这个选项；
+- "alt_touchpad_config"：若触摸板存在问题，则尝试使用；
+- "alt_touchpad_config2"：另一个触摸板问题的解决方案；
+- "disable_intel_hda"：某些Chromebook需要屏蔽snd_hda_intel模块，本选项将会再次进行此操作；
+- "internal_mic_fix"：用于强制启用某些设备的内置麦克风；
+- "asus_c302"：华硕C302设备专用的固件和补丁；
+- "baytrail_chromebook"：英特尔Baytrail架构处理器Chromebook专用的音频修复；
+- "sysfs_tablet_mode"：允许从sysfs控制平板模式(使用`echo 1 | sudo tee /sys/bus/platform/devices/tablet_mode_switch.0/tablet_mode`命令来激活，或者使用0来关闭)；
+- "force_tablet_mode"：与上一条相同，但在开机时默认启用平板模式；
+- "suspend_s3"：关闭“挂起到空闲（S0ix）”状态，并使用S3代替；
+- "advanced_als"：ChromeOS默认的自动亮度控制非常的基础 (https://chromium.googlesource.com/chromiumos/platform2/+/master/power_manager/docs/screen_brightness.md)，此选项将开启更多自动亮度控制等级（参考自Google Pixel Slate）。
 
-Add "options=option1,option2,..." (without spaces) to the kernel command line to activate them.
-you can add it after cros_debug and before loop.max.....
+在内核命令行上添加"options=选项1,选项2,..."（没有空格）来激活它们。
+请将上述指令添加在cros_debug之后（含空格），loop.max.....之前。最后一个选项没有逗号，并与loop.max存在一个空格。
 
-For example: booting with "options=enable_updates,advanced_als" will activate both options.
+例如："cros_debug options=enable_updates,advanced_als loop.max....."将会开启这两个选项。
 
 ## Kernel command line parameters
 
