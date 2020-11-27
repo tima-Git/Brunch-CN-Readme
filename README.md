@@ -1,4 +1,4 @@
-# Brunch framework（Chinese Simplified Translated Readme）
+# Brunch框架说明文件（简体中文翻译）
 
 ## 概述
 
@@ -8,6 +8,8 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 
 **警告：Brunch并非ChromeOS默认支持的工作方式，某些情况下，Brunch下的ChromeOS的脚本运行可能会出现问题，并有可能会意外删除你的数据（甚至非ChromeOS分区的数据）。同时，ChromeOS恢复镜像中包含了可能与其他设备非常相似的固件更新，可能会导致这个相似的设备接受并错误地刷入。若你选择安装Brunch，则你同意承担上述所有风险，并且本人不对你机器工作异常、数据丢失等后果进行负责。因此，我们建议仅在没有任何敏感数据的设备上安装Brunch框架，并且建议将非敏感的数据也备份到云端。**
 
+**提醒：本Repo仅用于对README.md文件进行汉化，本人并不会对此Repo内的其他任何文件进行后续开发和修改。若要了解和下载Project Brunch的最新版本以及提交issue等，请移步原作者sebanc页面！**
+
 ## 硬件支持和新增的功能
 
 硬件支持高度依赖通用Linux内核中的硬件兼容性。因此，只有支持Linux的硬件才能够正常工作，并且针对你设备所使用的特定的内核命令应该能够通过GRUB引导程序（参阅“修改GRUB引导程序”一节）。
@@ -15,7 +17,7 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 基础硬件兼容性：
 - x86_64电脑并支持UEFI引导；
 - 英特尔硬件（CPU和GPU），从第1代“Nehalem”架构开始（即第一代Core i系列处理器，参见https://en.wikipedia.org/wiki/Intel_Core ） ；
-- AMD Stoney Ridge（第7代APU，参见 https://en.wikipedia.org/wiki/List_of_AMD_accelerated_processing_units ），仅能使用“grunt”恢复镜像（更老的处理器和最新的锐龙处理器暂不支持）；
+- AMD Stoney Ridge（第7代APU，A4/A6/10-9000系列，参见 https://en.wikipedia.org/wiki/List_of_AMD_accelerated_processing_units ），仅能使用“grunt”恢复镜像（更老的处理器和最新的锐龙处理器暂不支持）；
 - Nvidia独立显卡也不受支持。
 
 针对BIOS/MBR引导的特别步骤：参照下述步骤进行操作，但在解压Brunch后，请将在本branch（master）中的“mbr_support.tar.gz”也解压进同一目录。
@@ -34,7 +36,7 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 - 已编译镜像：为诸如eve（Google Pixelboot）和nocturne（Google Pixel Slate）这样的单一设备配置。
 - 未编译镜像：通过CrosConfig工具，可配置用于多个设备的镜像。
 
-与基本支持已编译镜像（的配置和Android程序访问）的Croissant框架相反，Brunch在使用了未编译镜像的情况下，理应也能让其两者正常运行，并提供更好的硬件兼容性。
+与使用已编译镜像（的配置和Android程序访问）的Croissant框架相反，Brunch在使用了未编译镜像的情况下，理应也能让其两者正常运行，并提供更好的硬件兼容性。
 
 目前来说：
 - “rammus”镜像推荐在第4代酷睿及更新的英特尔处理器上使用。
@@ -64,7 +66,7 @@ ChromeOS恢复镜像可以从https://cros-updates-serving.appspot.com/ 或者 ht
 3. 打开终端，进入Brunch压缩包所在目录。
 4. 解压：
 ```
-tar zxvf brunch_< version >.tar.gz
+tar zxvf brunch_< 版本号 >.tar.gz
 ```
 5. 查看你U盘/SD卡/硬盘的名称，例如/dev/sdX（不含“X”后的数字。必须十分小心，因为安装程序会删除该设备的所有文件）
 6. 将ChromeOS安装在你的U盘/SD卡/硬盘上（请删除所有“<>”注释内容）：
@@ -76,92 +78,92 @@ sudo bash chromeos-install.sh -src < ChromOS恢复镜像所在位置 > -dst < �
 
 此时GRUB菜单应该会出现，选择ChromeOS，几分钟后（期间Brunch框架正在为首次启动自行编译），你应该就能看到ChromeOS的欢迎界面，并可以开始使用了。
 
-### Dual Boot ChromeOS from your HDD
+### 在硬盘上双系统启动
 
-ChromeOS partition scheme is very specific which makes it difficult to dual boot. One solution to circumvent that is to keep ChromeOS in a disk image on the hard drive and run it from there.
+ChromeOS的分区结构非常特别，从而使得它很难实现双系统引导。其中一个解决方案就是绕过这个，并将ChromeOS放置在一个磁盘镜像中，并从镜像引导。
 
-Make sure you have an ext4 (recommended) or NTFS partition with at least 14gb of free space available and no encryption or create one (refer to online resources).
+确保你拥有一个ext4（推荐）或NTFS分区，可用空间至少大于14GB，并且没有任何加密。如果没有分区，则手动创建一个（参考网络教程）。
 
-1. Download the ChromeOS recovery image and extract it.
-2. Download the Brunch release corresponding to the ChromeOS recovery image version you have downloaded (from the GitHub release section).
-3. Open a terminal, navigate to the directory containing the package.
-4. Extract it: 
+1. 下载ChromeOS恢复镜像并解压。
+2. 下载与ChromeOS版本对应的Brunch框架（参见Release页面）。
+3. 打开终端，进入Brunch压缩包所在目录。
+4. 解压：
 ```
-tar zxvf brunch_< version >.tar.gz
+tar zxvf brunch_< 版本号 >.tar.gz
 ```
-5. Mount the unencrypted ext4 or NTFS partition on which we will create the disk image to boot from:
+5. 将未加密的ext4或NTFS分区挂载至需要创建磁盘镜像的目录：
 ```
 mkdir -p ~/tmpmount
-sudo mount < the destination partition (ext4 or ntfs) which will contain the disk image > ~/tmpmount
+sudo mount < 需要放置镜像的ext4或NTFS分区的名称（包含sdX后的数字） > ~/tmpmount
 ```
-6. Create the ChromeOS disk image:
+6. 创建ChromeOS磁盘镜像：
 ```
 sudo bash chromeos-install.sh -src < path to the ChromeOS recovery image > -dst ~/tmpmount/chromeos.img -s < size you want to give to your chromeos install in GB (system partitions will take around 10GB, the rest will be for your data) >
 ```
-7. Create a GRUB configuration file for brunch in your linux install:
-- Copŷ the grub config which appeared in the terminal at the end of the process (the text between lines with stars)
-- Run `sudo cp /etc/grub.d/40_custom /etc/grub.d/99_brunch`
-- Then run `sudo nano /etc/grub.d/99_brunch`, paste the grub config at the end of the file. Save the changes and exit nano (CTRL-X).
-- Lastly, run `sudo update-grub`.
-8. Unmout the destination partition
+7. 在Linux中创建一个GRUB的配置文件，用于Brunch引导：
+- 在脚本处理结束后，复制在终端中出现的grub配置信息（在两行星号之间的文字）
+- 执行 `sudo cp /etc/grub.d/40_custom /etc/grub.d/99_brunch`
+- 接下来执行 `sudo nano /etc/grub.d/99_brunch`在文件末尾粘贴grub配置信息，并保存退出nano（Ctrl+X）
+- 最后，执行 `sudo update-grub`
+8. 卸载目标分区
 ```
 sudo umount ~/tmpmount
 ```
-9. (secure boot only) Download the secure boot key "brunch.der" in this branch (master) of the repository and enroll it by running the command:
+9. （仅针对开启了安全引导的用户）下载本branch (master)的安全引导密钥“brunch.der”并通过以下命令合并：
 ```
 sudo mokutil --import brunch.der
 ```
-10. Reboot your computer and boot to the bootloader with the modified GRUB config.
+10. 重启电脑，进入已经修改好的GRUB引导程序。
 
-The GRUB menu should appear, select "ChromeOS (boot from disk image)" and after a few minutes (the Brunch framework is building itself on the first boot), you should be greeted by ChromeOS startup screen. You can now start using ChromeOS from your HDD.
+此时，GRUB菜单就会出现，选择“ChromeOS (boot from disk image)”，几分钟后（期间Brunch框架正在为首次启动自行编译），你应该就能看到ChromeOS的欢迎界面，并可以开始使用了。
 
-## Install ChromeOS from Windows
+## 在Windows下安装ChromeOS
 
-### Requirements
+### 需求
 
-- Administrator access.
+- 管理员权限
 
-### Install ChromeOS on a USB flash drive / SD card
+### 在U盘/SD卡上安装ChromeOS
 
-1. Download the ChromeOS recovery image and extract it.
-2. Download the Brunch release corresponding to the ChromeOS recovery version you have downloaded (from the GitHub release section).
-3. Install the Ubuntu WSL from the Microsoft store (refer to online resources).
-4. Launch Ubuntu WSL and install pv, tar and cgpt packages:
+1. 下载ChromeOS恢复镜像并解压。
+2. 下载与ChromeOS版本对应的Brunch框架（参见Release页面）。
+3. 在Microsoft商店中安装Ubuntu WSL（参见网络教程）。
+4. 运行Ubuntu WSL并安装pv、tar和cgpt依赖：
 ```
 sudo apt update && sudo apt install pv tar cgpt
 ```
-5. Browse to your Downloads folder using `cd`:
+5. 使用 `cd` 命令进入Brunch压缩包所在目录：
 ```
 cd /mnt/c/Users/< username >/Downloads/
 ```
-6. Extract the package:
+6. 解压：
 ```
 sudo tar zxvf brunch_< version >.tar.gz
 ```
-7. Make sure you have at least 14gb of free space available
-8. Create a ChromeOS image:
+7. 确保你的硬盘上有至少14GB的可用空间。
+8. 创建ChromeOS镜像：
 ```
-sudo bash chromeos-install.sh -src < path to the ChromeOS recovery image > -dst chromeos.img
+sudo bash chromeos-install.sh -src < ChromOS恢复镜像所在位置 > -dst chromeos.img
 ```
-9. Use "Rufus" (https://rufus.ie/) to write the chromeos.img to the USB flash drive / SD card.
-10. Reboot your computer and boot from the USB flash drive / SD card (refer to your computer manufacturer's online resources).
-11. (Secure Boot only) A blue screen saying "Verfification failed: (15) Access Denied" will appear upon boot and you will have to enroll the secure boot key by selecting "OK->Enroll key from disk->EFI-SYSTEM->brunch.der->Continue". Reboot your computer and boot again from the USB flash drive / SD card.
-12. The GRUB menu should appear, select ChromeOS and after a few minutes (the Brunch framework is building itself on the first boot), you should be greeted by ChromeOS startup screen.
-At this stage, your USB flash drive / SD card is incorrectly recognized as 14GB regardless of its actual capacity. To fix this:
-13. At the ChromeOS startup screen, press CTRL+ALT+F2 to go into a shell session.
-14. Login as `root`
-15. Execute the below command:
+9. 使用“Rufus”（https://rufus.ie/ ）来将chromeos.img写入你的U盘/SD卡。
+10. 重启电脑，并引导至U盘/SD卡/硬盘（参见电脑制造商的说明）。
+11. （仅针对开启了Secure Boot安全引导的用户）若出现蓝屏并提示 "Verfification failed: (15) Access Denied"，则你需要将安全引导的密钥导入。选择“OK->Enroll key from disk->EFI-SYSTEM->brunch.der->Continue”，然后再次重启并引导。
+12. 此时GRUB菜单应该会出现，选择ChromeOS，几分钟后（期间Brunch框架正在为首次启动自行编译），你应该就能看到ChromeOS的欢迎界面，并可以开始使用了。
+至此阶段，你的U盘/SD卡会被错误地识别为仅有14GB空间，无论实际大小是多少。请参照以下步骤修复：
+13. 在ChromeOS的桌面，按下Ctrl+Alt+F2打开一个shell进程。
+14. 以 `root` 身份登录。
+15. 执行以下命令：
 ```
 sudo resize-data
 ```
-16. Reboot your computer when requested and boot again from USB flash drive / SD card. You can now start using ChromeOS.
+16. 当提示需要重启时，重启你的设备，并再次引导进U盘/SD卡，此时你就能正常使用了。
 
-### Dual Boot ChromeOS from your HDD
+### 在硬盘上双系统启动（新版教程，灵活性较低）
 
-1. Make sure you have a NTFS partition with at least 14gb of free space available and no BitLocker encryption or create one (refer to online resources).
-2. Make a ChromeOS USB flashdrive / SD card (see above) and boot it.
-3. Open the ChromeOS shell (CTRL+ALT+T and enter `shell` at the invite).
-4. Mount the unencrypted ext4 or NTFS partition on which we will create the disk image to boot from:
+1. 确保你拥有一个NTFS分区，可用空间至少14GB，并且没有BitLocker加密。如果没有分区，可以创建一个（参见网络教程）。
+2. 创建一个运行ChromeOS的U盘/SD卡并引导进入。
+3. 打开ChromeOS Shell（Ctrl+Alt+T并输入 `shell`）。
+4. 将未加密的NTFS分区挂载至需要创建磁盘镜像的目录：
 ```
 mkdir -p ~/tmpmount
 sudo mount < the destination partition (ext4 or ntfs) which will contain the disk image > ~/tmpmount
@@ -187,7 +189,7 @@ sudo umount ~/tmpmount
 16. The GRUB-2 win menu should appear, select "ChromeOS". Brunch will be rebuilt on first boot so, be patient. You should be greeted by ChromeOS startup screen once the process completes.
 You can now start using ChromeOS from your HDD.
 
-## Install ChromeOS on HDD from ChromeOS
+## 在ChromeOS下安装ChromeOS
 
 1. Boot your ChromeOS USB flash drive / SD card.
 2. Open the ChromeOS shell (CTRL+ALT+T and enter `shell` at the invite)
@@ -227,7 +229,7 @@ The GRUB menu should appear, select ChromeOS and after a few minutes (the Brunch
 - "sysfs_tablet_mode"：允许从sysfs控制平板模式(使用`echo 1 | sudo tee /sys/bus/platform/devices/tablet_mode_switch.0/tablet_mode`命令来激活，或者使用0来关闭)；
 - "force_tablet_mode"：与上一条相同，但在开机时默认启用平板模式；
 - "suspend_s3"：关闭“挂起到空闲（S0ix）”状态，并使用S3代替；
-- "advanced_als"：ChromeOS默认的自动亮度控制非常的基础 (https://chromium.googlesource.com/chromiumos/platform2/+/master/power_manager/docs/screen_brightness.md)，此选项将开启更多自动亮度控制等级（参考自Google Pixel Slate）。
+- "advanced_als"：ChromeOS默认的自动亮度控制非常的基础 (https://chromium.googlesource.com/chromiumos/platform2/+/master/power_manager/docs/screen_brightness.md )，此选项将开启更多自动亮度控制等级（参考自Google Pixel Slate）。
 
 在内核命令行上添加"options=选项1,选项2,..."（没有空格）来激活它们。
 请将上述指令添加在cros_debug之后（含空格），loop.max.....之前。最后一个选项没有逗号，并与loop.max存在一个空格。
