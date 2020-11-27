@@ -8,7 +8,7 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 
 **警告：Brunch并非ChromeOS默认支持的工作方式，某些情况下，Brunch下的ChromeOS的脚本运行可能会出现问题，并有可能会意外删除你的数据（甚至非ChromeOS分区的数据）。同时，ChromeOS恢复镜像中包含了可能与其他设备非常相似的固件更新，可能会导致这个相似的设备接受并错误地刷入。若你选择安装Brunch，则你同意承担上述所有风险，并且本人不对你机器工作异常、数据丢失等后果进行负责。因此，我们建议仅在没有任何敏感数据的设备上安装Brunch框架，并且建议将非敏感的数据也备份到云端。**
 
-**提醒：本Repo仅用于对README.md文件进行汉化，本人并不会对此Repo内的其他任何文件进行后续开发和修改。若要了解和下载Project Brunch的最新版本以及提交issue等，请移步原作者sebanc页面！**
+**译者声明：本Repo仅用于对README.md文件进行汉化，并基于个人实践操作经验，对其中部分内容进行适当添加、修改。本人并不会对此Repo内的其他任何文件进行后续开发和修改。若要了解和下载Project Brunch的最新版本以及提交issue等，请移步原作者sebanc页面！**
 
 ## 硬件支持和新增的功能
 
@@ -98,7 +98,7 @@ sudo mount < 需要放置镜像的ext4或NTFS分区的名称（包含sdX后的�
 ```
 6. 创建ChromeOS磁盘镜像：
 ```
-sudo bash chromeos-install.sh -src < path to the ChromeOS recovery image > -dst ~/tmpmount/chromeos.img -s < size you want to give to your chromeos install in GB (system partitions will take around 10GB, the rest will be for your data) >
+sudo bash chromeos-install.sh -src < ChromOS恢复镜像所在位置 > -dst ~/tmpmount/chromeos.img -s < 以GB为单位，输入你希望分配给ChromeOS的容量（系统分区大约会占用10GB，其余的将作为数据分区）>
 ```
 7. 在Linux中创建一个GRUB的配置文件，用于Brunch引导：
 - 在脚本处理结束后，复制在终端中出现的grub配置信息（在两行星号之间的文字）
@@ -134,14 +134,14 @@ sudo apt update && sudo apt install pv tar cgpt
 ```
 5. 使用 `cd` 命令进入Brunch压缩包所在目录：
 ```
-cd /mnt/c/Users/< username >/Downloads/
+cd /mnt/c/Users/< 用户名 >/Downloads/
 ```
 6. 解压：
 ```
-sudo tar zxvf brunch_< version >.tar.gz
+sudo tar zxvf brunch_< 版本号 >.tar.gz
 ```
 7. 确保你的硬盘上有至少14GB的可用空间。
-8. 创建ChromeOS镜像：
+8. 创建ChromeOS磁盘镜像：
 ```
 sudo bash chromeos-install.sh -src < ChromOS恢复镜像所在位置 > -dst chromeos.img
 ```
@@ -160,49 +160,100 @@ sudo resize-data
 
 ### 在硬盘上双系统启动（新版教程，灵活性较低）
 
-1. 确保你拥有一个NTFS分区，可用空间至少14GB，并且没有BitLocker加密。如果没有分区，可以创建一个（参见网络教程）。
+1. 确保你拥有一个NTFS分区，可用空间至少14GB，并且没有BitLocker加密。如果没有分区，可以手动创建一个（参见网络教程）。
 2. 创建一个运行ChromeOS的U盘/SD卡并引导进入。
 3. 打开ChromeOS Shell（Ctrl+Alt+T并输入 `shell`）。
 4. 将未加密的NTFS分区挂载至需要创建磁盘镜像的目录：
 ```
 mkdir -p ~/tmpmount
-sudo mount < the destination partition (ext4 or ntfs) which will contain the disk image > ~/tmpmount
+sudo mount < 需要生成镜像的目标分区名称 > ~/tmpmount
 ```
-5. Create the ChromeOS disk image:
+5. 创建ChromeOS磁盘镜像：
 ```
-sudo bash chromeos-install -dst ~/tmpmount/chromeos.img -s < size you want to give to your chromeos install in GB (system partitions will take around 10GB, the rest will be for your data) >
+sudo bash chromeos-install -dst ~/tmpmount/chromeos.img -s < 以GB为单位，输入你希望分配给ChromeOS的容量（系统分区大约会占用10GB，其余的将作为数据分区）>
 ```
-6. Copy the GRUB configuration which is displayed in the terminal (select it and CTRL+SHIFT+C).
-7. Run `sudo nano ~/tmpmount/chromeos.grub.txt` and paste the config there (CTRL°SHIFT+V to paste and then CTRL-X to exit)
-8. Unmout the destination partition
+6. 复制在终端中显示的GRUB配置信息（选中并按下Ctrl+Shift+C）。
+7. 执行 `sudo nano ~/tmpmount/chromeos.grub.txt` 命令并粘贴 (Ctrl+Shift+V粘贴，Ctrl+X退出)。
+8. 卸载目标分区：
 ```
 sudo umount ~/tmpmount
 ```
-9. Reboot to Windows, Install grub 2 win (https://sourceforge.net/projects/grub2win/) and launch the application.
-10. Click on `Manage Boot Menu` button, then `Add A New Entry`.
-11. Select `submenu` in the 'Type' section and input "Chrome OS" as title.
-12. Now, click `Edit Custom Code` this will open a text file. Open the chromeos.grub.txt file we saved in step 7 and copy the grub configuration in grub2win.
-#### Then remove the "rmmod tpm" line.
-13. Click `Ok` and `apply` (It won't save your entry unless you click `ok` and `apply`)
-14. Important: Disable "Fast startup" in Windows (refer to online resources).
-15. Reboot.
-16. The GRUB-2 win menu should appear, select "ChromeOS". Brunch will be rebuilt on first boot so, be patient. You should be greeted by ChromeOS startup screen once the process completes.
-You can now start using ChromeOS from your HDD.
+9. 重启至Windows，安装grub 2 win (https://sourceforge.net/projects/grub2win/) 并打开程序。
+10. 点击 `Manage Boot Menu` 按钮，选择 `Add A New Entry` 。
+11. 在“Type”菜单下选择 `submenu` ，并输入“Chrome OS”作为标题。
+12. 点击 `Edit Custom Code` 来打开一个文本编辑框。打开第7步创建的chromeos.grub.txt，并将其中的内容复制到grub2win的配置文本中。
+#### 删除“rmmod tpm”一行
+13. 保存文件，点击 `Ok` 和 `apply` （点击这两个按钮之前，所有配置都不会被保存）。
+14. 重要：关闭Windows的快速启动（参见网络教程）。
+15. 重启。
+16. 此时GRUB2Win引导菜单将会出现，选择Chrome OS进入，并耐心等待。
+现在你可以正常使用ChromeOS了。
+
+### 在硬盘上双系统启动（旧版教程，灵活性较高）
+
+1. 下载ChromeOS恢复镜像并解压。
+2. 下载与ChromeOS版本对应的Brunch框架（参见Release页面）。
+3. 在Microsoft商店中安装Ubuntu WSL（参见网络教程）。
+4. 运行Ubuntu WSL并安装pv、tar和cgpt依赖：
+```
+sudo apt update && sudo apt install pv tar cgpt
+```
+5. 使用 `cd` 命令进入Brunch压缩包所在目录（请根据实际情况修改以下内容）：
+```
+cd /mnt/c/Users/< 用户名 >/Downloads/
+```
+6. 解压：
+```
+sudo tar zxvf brunch_< 版本号 >.tar.gz
+```
+7. 确保你的硬盘存在一个NTFS分区，可用空间至少14GB，并且没有BitLocker加密。如果没有分区，可以手动创建一个（参见网络教程）。亦可以使用Windows所安装在的分区。
+8. 创建ChromeOS磁盘镜像：
+```
+sudo bash chromeos-install.sh -src < ChromOS恢复镜像所在位置 > -dst chromeos.img < 这将会在Brunch框架所在的目录中直接创建名为chromeos.img的镜像，且不影响分区的其他数据 > -s < 以GB为单位，输入你希望分配给ChromeOS的容量（系统分区大约会占用10GB，其余的将作为数据分区）>
+```
+9. 将Brunch目录下生成的chromeos.img拷贝至你所需要的位置（可以是任意一个NTFS分区的根目录，也可以放在子目录下）。
+10. 下载任意一个Linux发行版（如Linux Mint、Ubuntu等，建议使用带图形界面的版本），将其iso写入U盘/SD卡。
+11. 重启电脑，并引导至U盘/SD卡内，进入Linux发行版的Live预览（无需安装）。
+12. 使用磁盘分区工具（如cgpt等）查看ChromeOS镜像所在目标分区的名称（例如/dev/sda1、/dev/nvme0n1p3等），并记下。
+13. 拔下U盘/SD卡并重启电脑，回到Windows下。
+14. 安装grub 2 win (https://sourceforge.net/projects/grub2win/) 并打开程序。
+15. 点击 `Manage Boot Menu` 按钮，选择 `Add A New Entry` 。
+16. 在“Type”菜单下选择 `submenu` （亦可以使用isoboot或custom code，没有明显区别），并输入“Chrome OS”作为标题。
+17. 点击 `Edit Custom Code` 来打开一个文本编辑框。参照下列内容，对必要信息进行修改，并输入到文本框内。
+```
+img_part=/dev/sda1 < 或/dev/sdb1、/dev/nvme0n1p3等，参照第12步获得的信息修改 >
+img_path=/ChromeOS/chromeos.img < 如果镜像所在位置和文件名不同，请按照你的实际情况修改。若镜像在子目录内，子目录的大小写必须与实际相符！若在根目录内，则保留开头的“/”，然后输入镜像名称 >
+search --no-floppy --set=root --file $img_path
+loopback loop $img_path
+linux (loop,7)/kernel boot=local noresume noswap loglevel=7 disablevmx=off \
+	cros_secure cros_debug enforce_hyperthreading=1 options=enable_updates,advanced_als loop.max_part=16 img_part=$img_part img_path=$img_path
+initrd (loop,7)/lib/firmware/amd-ucode.img (loop,7)/lib/firmware/intel-ucode.img (loop,7)/initramfs.img
+
+###警告：请不要复制本行及以下所有行。在粘贴时请删除上面所有的“<>”注释！另外，除了“img_part”、“img_path”两项和“cros_debug”之后、“loop.max”之前的内容，其余内容不需要改动，不建议尝试手动修改。一旦有空格、逗号等不符合格式要求，则GRUB2Win引导界面会出现错误信息。###
+###Grub2Win不需要“rmmod tpm”一行，因此本例中没有提供。###
+###若你已经熟悉Linux环境下你的硬盘分区的名称，则可以忽略第10到第12步。分区名称必须严格采用Linux环境下的格式，在Windows的“磁盘管理”和“diskpart”工具中的内容基本没有参考价值。###
+
+```
+18. 保存文件，点击 `Ok` 和 `apply` （点击这两个按钮之前，所有配置都不会被保存）。
+19. 重要：关闭Windows的快速启动（参见网络教程）。
+20. 重启。
+21. 此时GRUB2Win引导菜单将会出现，选择Chrome OS进入，并耐心等待。
+现在你可以正常使用ChromeOS了。
 
 ## 在ChromeOS下安装ChromeOS
 
-1. Boot your ChromeOS USB flash drive / SD card.
-2. Open the ChromeOS shell (CTRL+ALT+T and enter `shell` at the invite)
-3. Identify your HDD device name e.g. /dev/sdX (Be careful here as the installer will erase all data on the target drive)
-4. Install ChromeOS to HDD:
+1. 引导进你U盘/SD卡的ChromeOS。
+2. 打开ChromeOS Shell (Ctrl+Alt+T并输入 `shell` )。
+3. 查看你硬盘的名称，例如/dev/sdX（不含“X”后的数字。必须十分小心，因为安装程序会删除该设备的所有文件）。
+4. 将ChromeOS安装到硬盘上：
 ```
-sudo chromeos-install -dst < your HDD device. e.g. /dev/sdX >
+sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 ```
-5. Shutdown your computer and remove your ChromeOS USB flash drive / SD card.
+5. 关闭电脑，并取出U盘/SD卡。
 
-Note: Even if you boot from GRUB on your HDD, if you have a ChromeOS USB flash drive / SD card inserted, the initramfs will boot from it in priority.
+注意：即便你从硬盘上的GRUB引导，如果你安装了ChromeOS的U盘/SD卡处于插入状态，initramfs也会优先从其上面引导。
 
-The GRUB menu should appear, select ChromeOS and after a few minutes (the Brunch framework is building itself on the first boot), you should be greeted by ChromeOS startup screen. You can now start using ChromeOS.
+此时GRUB菜单应该会出现，选择ChromeOS，几分钟后（期间Brunch框架正在为首次启动自行编译），你应该就能看到ChromeOS的欢迎界面，并可以开始使用了。
 
 # 可选步骤
 
@@ -211,9 +262,9 @@ The GRUB menu should appear, select ChromeOS and after a few minutes (the Brunch
 某些选项的特定功能可以通过内核命令行来激活，但这些功能也有可能存在风险，或不适用于所有用户：
 - "enable_updates"：允许ChromeOS系统更新（请自行承担风险：ChromeOS会被升级，但Brunch框架/内核并不会。这可能会让你的ChromeOS工作不稳定甚至无法引导）；
 - "android_init_fix"：代替用的初始化，用于支持某些设备无法正确启动其中一种Android容器时进行切换；
-- "mount_internal_drives"：允许在ChromeOS下自动挂载硬盘分区（Android媒体服务将会检测这些设备，在其结束前将会造成高CPU占用。此过程依照数据的实际情况，有可能会花费数小时不等），若分区存在卷标，则会被使用；
-- "broadcom_wl"：若你的设备存在博通无线网络设备，则启用；
-- "iwlwifi_backport"：若内核无法原生支持你的英特尔无线网络设备，则启用；
+- "mount_internal_drives"：允许在ChromeOS下自动挂载内置硬盘的所有分区（Android媒体服务将会检测这些设备，在其结束前将会造成高CPU占用。此过程依照数据的实际情况，有可能会花费数小时不等），若分区存在卷标，则会被使用；
+- "broadcom_wl"：若你的设备存在博通无线网卡，则启用；
+- "iwlwifi_backport"：若内核无法原生支持你的英特尔无线网卡，则启用；
 - "rtl8188eu"：若你的设备使用了rtl8188eu无线网卡，则启用；
 - "rtl8723bu": 若你的设备使用了rtl8723bu无线网卡，则启用；
 - "rtl8723de": 若你的设备使用了rtl8723de无线网卡，则启用；
@@ -236,109 +287,109 @@ The GRUB menu should appear, select ChromeOS and after a few minutes (the Brunch
 
 例如："cros_debug options=enable_updates,advanced_als loop.max....."将会开启这两个选项。
 
-## Kernel command line parameters
+## 内核命令行参数
 
-Those are not options, just add them on the kernel command line after "cros_debug" and before "options=...." if any:
-- "enforce_hyperthreading=1": improve performance by disabling a ChromeOS security feature and forcing hyperthreading everywhere (even in crositini).
-- "i915.enable_fbc=0 i915.enable_psr=0": if you want to use crouton (needed with kernel 5.4).
-- "psmouse.synaptics_intertouch=1": enables gestures with more than 2 fingers on some touchpad models.
-- "console=": No text will be displayed on boot (it will not make boot faster).
+以下内容不是选项，如果符合以下情况，请将对应内容添加至“cros_debug”之后、“options=...”之前：
+- "enforce_hyperthreading=1"：通过关闭ChromeOS的安全功能来强行开启超线程以提升性能（甚至在crositini下也是如此）。
+- "i915.enable_fbc=0 i915.enable_psr=0"：如果你使用了crouton(5.4内核需要)。
+- "psmouse.synaptics_intertouch=1"：在某些触摸板上开启2指以上的手势操作。
+- "console="：在引导时不显示任何命令行文字（并不会加快启动速度）。
 
-like this: 
+就像这样：
 ![](https://user-images.githubusercontent.com/69226625/97113026-9fec2880-170d-11eb-930f-972f0b38af4f.png)
-## Identify the installed Brunch framework version
+## 检查已安装的Brunch框架版本
 
-1. Open the ChromeOS shell (CTRL+ALT+T and enter `shell` at the invite)
-2. Display the Brunch version:
+1. 打开ChromeOS Shell (Ctrl+Alt+T并输入 `shell` )。
+2. 显示Brunch版本：
 ```
 cat /etc/brunch_version
 ```
 
-## Update both ChromeOS and the Brunch framework
+## 同时升级ChromeOS和Brunch框架
 
-It is currently recommended to only update ChromeOS when the matching version of the Brunch framework has been released.
+目前，我们只推荐在对应版本的Brunch框架推出后才升级ChromeOS。
 
-1. Download the new ChromeOS recovery image version and extract it.
-2. Download the Brunch release corresponding to the ChromeOS recovery version (from the GitHub release section).
-3. Open the ChromeOS shell (CTRL+ALT+T and enter `shell` at the invite)
-4. Update both ChromeOS and Brunch:
+1. 下载新版的ChromeOS恢复镜像并解压。
+2. 下载与ChromeOS版本对应的Brunch框架（参见Release页面）。
+3. 打开ChromeOS Shell (Ctrl+Alt+T并输入 `shell` )。
+4. 同时升级ChromeOS和Brunch框架：
 ```
-sudo chromeos-update -r < path to the ChromeOS recovery image > -f < path to the Brunch release archive >
+sudo chromeos-update -r < ChromeOS所在位置 > -f < Brunch框架压缩包所在位置 >
 ```
-5. Restart ChromeOS
+5. 重启ChromeOS。
 
-## Update only the Brunch framework
+## 仅升级Brunch框架
 
-If you chose to use the "enable_updates" option and have updated to a new ChromeOS release, you might want to update the brunch framework to match your current ChromeOS version.
+如果你使用了“enable_updates”选项并已经更新到新版ChromeOS，那么你可能需要更新Brunch框架来对应目前的ChromeOS版本。
 
-1. Download the Brunch release corresponding to your ChromeOS version (from the GitHub release section).
-2. Open the ChromeOS shell (CTRL+ALT+T and enter `shell` at the invite)
-3. Update Brunch:
+1. 下载与ChromeOS版本对应的Brunch框架（参见Release页面）。
+2. 打开ChromeOS Shell (Ctrl+Alt+T并输入 `shell` )。
+3. 升级Brunch：
 ```
-sudo chromeos-update -f < path to the Brunch release archive >
+sudo chromeos-update -f < Brunch框架压缩包所在位置 >
 ```
-4. Restart ChromeOS
+4. 重启ChromeOS。
 
-*WARNING*: Do not update brunch with unfinished OTA update as it may make chromeOS unbootable.
+*警告*：在ChromeOS的OTA更新未完成之前，请勿更新Brunch，否则有可能无法引导。
 
-## Modify the GRUB bootloader
+## 修改GRUB引导程序
 
-### From Windows
+### 在Windows下修改
 
-1. Install notepad++ (https://notepad-plus-plus.org/)
-2. Look for the EFI partition in the Explorer and browse to the efi/boot folder.
-3. Edit the grub.cfg file with notepad++ (warning: editing this file with standard Notepad or Wordpad will render the file unusable and prevent GRUB from booting due to formatting issues)
-4. Add your specific kernel parameters at the end of the Linux line arguments.
+1. 安装Notepad++ (https://notepad-plus-plus.org/)
+2. 找到EFI分区并进入efi/boot文件夹。
+3. 使用Notepad++编辑grub.cfg文件（警告：因为编码格式问题，使用系统自带的记事本或写字板程序编辑此文件会导致其无法使用，并使GRUB无法正确引导）。
+4. 在linux行内添加你所需要的内核参数。
 
-### From Linux
+### 在Linux下修改
 
-1. Create a directory to mount the EFI partition:
+1. 创建一个目录来挂载EFI分区：
 ```
 mkdir /tmp/efi_part
 ```
-2. Mount the partition 12 of your device to your EFI partition:
+2. 挂载分区12到你的EFI分区：
 ```
-sudo mount /dev/< partition 12 of ChromeOS device > /tmp/efi_part
+sudo mount /dev/< ChromeOS设备的分区12的名称 > /tmp/efi_part
 ```
-3. Edit the file /tmp/efi_part/efi/boot/grub.cfg with your favorite editor (launched as root).
-4. Unmount the partition:
+3. 使用你喜欢的文本编辑器编辑/tmp/efi_part/efi/boot/grub.cfg，需要使用root权限。
+4. 卸载分区：
 ```
 sudo umount /tmp/efi_part
 ```
 
-### From ChromeOS
+### 在ChromeOS下修改
 
-1. Run `sudo edit-grub-config`.
-2. Now you can modify your grub entry.
-3. Save by Ctrl+o (Press enter to confirm).
-4. Exit by Ctrl+x.
+1. 运行 `sudo edit-grub-config`。
+2. 这样就可以修改GRUB引导配置了。
+3. 按下Ctrl+O保存（英文字母O，请敲回车确认）。
+4. 按Ctrl+X退出。
 
-You can visit wiki https://github.com/sebanc/brunch/wiki
+你还可以查看wiki https://github.com/sebanc/brunch/wiki
 
 
-# FAQ
+# 常见问题
 
-1) The instructions are difficult to follow as I am not familiar with Linux commands.
+1) 我不熟悉Linux命令行，这些说明太难了。
 
-I cannot not go much deeper into details here for now but I will try to clarify the install process once I see the main pain points. Nevertheless, ChromeOS is based on Linux and it would probably be interesting for you to read online resources on Linux basics before attempting this.
+我没法说得太过具体，但一旦发现有什么明显的痛点，我也会尽可能说得更清楚。然而，ChromeOS本身就基于Linux，如果你事先学习了一点基础的Linux知识，这个项目可能对你来说才会更有意思。
 
-2) My computer will not boot the created USB flash drive / SD card whereas it normally can (and I have correctly followed the instructions).
+2) 我已经按照步骤操作了，但我的电脑没有像以往那样正常引导进U盘/SD卡。
 
-Some devices (notably Surface Go) will not boot a valid USB flash drive / SD card with secure boot on even if the shim binary is signed. For those devices, you will need to disable secure boot in your bios settings and use the legacy EFI bootloader by adding the "-l" parameter when running the chromeos-install.sh script.
+某些设备（比如Surface Go）在安全引导开启时，完全不会引导一个合法的U盘/SD卡，哪怕二进制已经签名了。对于这些设备，你需要在BIOS中手动关闭安全引导，并且在使用chromeos-install.sh安装时，在尾部加上“-l”参数来使用传统EFI引导程序。
 
-3) The first boot and the ones after a framework change or an update are incredibly long.
+3) 首次启动、框架变更或升级之后的引导时间太久了。
 
-Unfortunately, the Brunch framework has to rebuild itself by copying the original rootfs, modules and firmware files after each significant change. The time this process takes depends mostly on your USB flash drive / SD card write speed. You may try with one that has better write speed or use the dual boot method to install it on your HDD.
+不幸的是，在每次重大改动之后，Brunch框架都需要通过拷贝原始rootfs、模块和固件文件来进行自我重建。其所需的时间根据你的U盘/SD卡速度的不同而不同。你可以试试使用更快的设备，或安装在你的内置硬盘里。
 
-4) ChromeOS reboots randomly.
+4) ChromeOS不定时重启。
 
-This can in theory be due to a lot of things. However, the most likely reason is that your USB flash drive / SD card is too slow. You may try with one that has better write speed or use the dual boot method to install it on your HDD.
+这理论上有很多种可能性，当然，最大的可能是你的U盘/SD卡太慢了。你可以试试使用更快的设备，或安装在你的内置硬盘里。
 
-5) Some apps do not appear on the playstore (Netflix...)
+5) 某些应用在商店里找不到（比如Netflix...）
 
-In order to have access to the ChromeOS shell, ChromeOS is started in developer mode by default. If you have a stable enough system, you can remove "cros_debug" from the GRUB kernel command line (see "Modify the GRUB bootloader" section) and then do a Powerwash (ChromeOS mechanism which will wipe all your data partition) to disable developer mode.
+为了能够访问ChromeOS Shell，ChromeOS默认就以开发者模式启动。如果你的系统足够稳定，你可以在GRUB的内核命令行中移除“cros_debug”（参见“修改GRUB引导程序”一节）并进行Powerwash（ChromeOS的一种机制，它会格式化ChromeOS的所有的数据分区）来关闭开发者模式。
 
-6) Some apps on the Playstore show as incompatible with my device.
+6) Play商店上的某些应用与我的设备不兼容。
 
-Some Playstore apps are not compatible with genuine Chromebooks so it is probably normal.
+Play商店上的某些应用与通用的Chromebook设备不兼容本来就不是什么稀罕事。
 
