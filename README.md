@@ -292,12 +292,12 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 
 ## 内核命令行参数
 
-以下内容不是选项，如果符合以下情况，请将对应内容添加至“cros_debug”之后、“options=...”之前：
+以下内容与上述选项不同，如果符合以下情况，请将对应内容添加至“cros_debug”之后、“options=...”之前：
 - "enforce_hyperthreading=1"：通过关闭ChromeOS的安全功能来强行开启超线程以提升性能（甚至在crositini下也是如此）。
 - "i915.enable_fbc=0 i915.enable_psr=0"：如果你使用了crouton(5.4内核需要)。
 - "psmouse.synaptics_intertouch=1"：在某些触摸板上开启2指以上的手势操作。
 - "console="：在引导时不显示任何命令行文字（并不会加快启动速度）。
-- "console=vt.global_cursor_default=0 brunch_bootsplash=default"：在K5.4内核下显示引导画面图像和简易信息，而不显示滚动的命令行文字。
+- "console=vt.global_cursor_default=0 brunch_bootsplash=default"：在K5.4内核下显示引导界面图像和简易信息，而不显示滚动的命令行文字。（与上一条选其一使用即可，不可重复使用）
 
 就像这样：
 ![](https://user-images.githubusercontent.com/69226625/97113026-9fec2880-170d-11eb-930f-972f0b38af4f.png)
