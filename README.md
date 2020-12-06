@@ -266,15 +266,18 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 - "broadcom_wl"：若你的设备存在博通无线网卡，则启用；
 - "iwlwifi_backport"：若内核无法原生支持你的英特尔无线网卡，则启用；
 - "rtl8188eu"：若你的设备使用了rtl8188eu无线网卡，则启用；
-- "rtl8723bu": 若你的设备使用了rtl8723bu无线网卡，则启用；
-- "rtl8723de": 若你的设备使用了rtl8723de无线网卡，则启用；
-- "rtl8821ce": 若你的设备使用了rtl8821ce无线网卡，则启用；
+- "rtl8723bu"：若你的设备使用了rtl8723bu无线网卡，则启用；
+- "rtl8723de"：若你的设备使用了rtl8723de无线网卡，则启用；
+- "rtl8812au"：若你的设备使用了rtl8812au无线网卡，则启用；
+- "rtl8821ce"：若你的设备使用了rtl8821ce无线网卡，则启用；
 - "rtbth"：若你的设备使用了RT3290/RT3298LE蓝牙设备，则启用；
+- "ipts"：启用K5.4内核下的Surface设备的触摸屏驱动（感谢Linux-surface团队，尤其是StollD）；
 - "acpi_power_button"：若长按电源按钮不显示电源菜单，则尝试使用这个选项；
 - "alt_touchpad_config"：若触摸板存在问题，则尝试使用；
 - "alt_touchpad_config2"：另一个触摸板问题的解决方案；
 - "disable_intel_hda"：某些Chromebook需要屏蔽snd_hda_intel模块，本选项将会再次进行此操作；
 - "internal_mic_fix"：用于强制启用某些设备的内置麦克风；
+- "mbp2018"：启用基于T2安全芯片的MacBook设备的桥和SPI驱动；
 - "asus_c302"：华硕C302设备专用的固件和补丁；
 - "baytrail_chromebook"：英特尔Baytrail架构处理器Chromebook专用的音频修复；
 - "sysfs_tablet_mode"：允许从sysfs控制平板模式(使用`echo 1 | sudo tee /sys/bus/platform/devices/tablet_mode_switch.0/tablet_mode`命令来激活，或者使用0来关闭)；
@@ -294,6 +297,7 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 - "i915.enable_fbc=0 i915.enable_psr=0"：如果你使用了crouton(5.4内核需要)。
 - "psmouse.synaptics_intertouch=1"：在某些触摸板上开启2指以上的手势操作。
 - "console="：在引导时不显示任何命令行文字（并不会加快启动速度）。
+- "console=vt.global_cursor_default=0 brunch_bootsplash=default"：在K5.4内核下显示引导画面图像和简易信息，而不显示滚动的命令行文字。
 
 就像这样：
 ![](https://user-images.githubusercontent.com/69226625/97113026-9fec2880-170d-11eb-930f-972f0b38af4f.png)
