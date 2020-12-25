@@ -226,7 +226,7 @@ img_path=/ChromeOS/chromeos.img < 如果镜像所在位置和文件名不同，�
 search --no-floppy --set=root --file $img_path
 loopback loop $img_path
 linux (loop,7)/kernel boot=local noresume noswap loglevel=7 disablevmx=off \
-	cros_secure cros_debug enforce_hyperthreading=1 options=enable_updates,advanced_als loop.max_part=16 img_part=$img_part img_path=$img_path
+	cros_secure cros_debug console=vt.global_cursor_default=0 brunch_bootsplash=default options=enable_updates,advanced_als loop.max_part=16 img_part=$img_part img_path=$img_path
 initrd (loop,7)/lib/firmware/amd-ucode.img (loop,7)/lib/firmware/intel-ucode.img (loop,7)/initramfs.img
 
 ###警告：请不要复制本行及以下所有行。在粘贴时请删除上面所有的“<>”注释！另外，除了“img_part”、“img_path”两项和“cros_debug”之后、“loop.max”之前的内容，其余内容不需要改动，不建议尝试手动修改。一旦有空格、逗号等不符合格式要求，则GRUB2Win引导界面会出现错误信息。###
