@@ -16,12 +16,12 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 
 基础硬件兼容性：
 - x86_64电脑并支持UEFI或MBR引导（使用MBR引导安装将会附带一些限制，详见“MBR/BIOS设备相关限制”一节）；
-- 英特尔硬件（CPU和GPU），从第1代“Nehalem”架构开始（即第一代Core i系列处理器，参见https://en.wikipedia.org/wiki/Intel_Core ） ；
-- AMD 锐龙3000系列（CPU和GPU），使用“zork”镜像（更新的锐龙处理器暂不受支持）；
-- 仅存在Nvidia独立显卡的设备也不受支持。
+- 英特尔酷睿i系列处理器（CPU和GPU），从第1代“Nehalem”架构开始（即第一代Core i系列处理器，参见https://en.wikipedia.org/wiki/Intel_Core ） ；
+- AMD 锐龙3000系列处理器（CPU和GPU），使用“zork”镜像（更新的锐龙处理器暂不受支持）；
+- 仅拥有Nvidia独立显卡的设备也不受支持，即便是同时拥有核显和Nvidia独显的设备，独立显卡也无法使用（含独显的Surface Book用户请在UEFI Settings-Devices中关闭“DGPU”选项，否则无法引导）。
 
 提醒：
-- 英特尔第1代核显不兼容高于r81的ChromeOS版本（后续更新中也许仍有可能有改变）。
+- 英特尔第1代核显不兼容高于r81的ChromeOS版本（后续更新中也许仍有可能改变）。
 - 某些英特尔第10代酷睿CPU似乎不兼容Android容器。
 - 英特尔第11代酷睿CPU暂不受支持。
 
@@ -45,7 +45,7 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 - “rammus”镜像推荐在第4代酷睿及更新的英特尔处理器上使用。
 - “samus”镜像推荐在第3代酷睿及更老的英特尔处理器上使用。
 - “zork”镜像仅在你使用AMD 锐龙3000系列处理器时使用。
-- “grunt”镜像仅在你使用AMD Stoney Ridge处理器（第7代APU，即A4/A6/A10-9000系列）。
+- “grunt”镜像仅在你使用AMD Stoney Ridge处理器（第7代APU，即A4/A6/A10-9000系列）时使用。
 
 ChromeOS恢复镜像可以从https://cros-updates-serving.appspot.com/ 或者 https://cros.tech/ 下载
 
@@ -277,7 +277,7 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 - 不支持多系统引导。
 
 安装步骤：
-1) 在“基础硬件需求”一节中确认你的CPU/GPU是否受到支持。
+1) 在“基础硬件兼容性”一节中确认你的CPU/GPU是否受到支持。
 2) 确认`pv`，`tar`，`cgpt`和`sgdisk`软件包/二进制已安装。
 3) 解压Brunch安装包到你需要的目录下。
 4) 解压mbr_support.tar.gz到同一目录（若需要覆盖文件，则覆盖）。
