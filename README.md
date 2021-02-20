@@ -8,19 +8,22 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 
 **警告：Brunch并非ChromeOS默认支持的工作方式，某些情况下，Brunch下的ChromeOS的脚本运行可能会出现问题，并有可能会意外删除你的数据（甚至非ChromeOS分区的数据）。同时，ChromeOS恢复镜像中包含了可能与其他设备非常相似的固件更新，可能会导致这个相似的设备接受并错误地刷入。若你选择安装Brunch，则你同意承担上述所有风险，并且本人不对你机器工作异常、数据丢失等后果进行负责。因此，我们建议仅在没有任何敏感数据的设备上安装Brunch框架，并且建议将非敏感的数据也备份到云端。**
 
-**译者声明：本Repo仅用于对README.md文件进行汉化，并基于个人实践操作经验，对其中部分内容进行适当添加、修改。本人并不会对此Repo内的其他任何文件进行后续开发和修改。若要了解和下载Project Brunch的最新版本以及提交issue等，请移步原作者sebanc页面！**
+**译者声明：本Repo仅用于对README.md文件进行汉化，并基于个人实践操作经验，对其中部分内容进行适当添加、修改。本人并不会对此Repo内的其他任何文件进行后续开发和修改。此外，本说明文件由于诸多原因，无法时刻与原Repo同步更新汉化，若要了解和下载Project Brunch的最新版本以及提交issue等，请移步原作者sebanc/brunch页面！**
 
 ## 硬件支持和新增的功能
 
 硬件支持高度依赖通用Linux内核中的硬件兼容性。因此，只有支持Linux的硬件才能够正常工作，并且针对你设备所使用的特定的内核命令应该能够通过GRUB引导程序（参阅“修改GRUB引导程序”一节）。
 
 基础硬件兼容性：
-- x86_64电脑并支持UEFI引导；
+- x86_64电脑并支持UEFI或MBR引导（使用MBR引导安装将会附带一些限制，详见“MBR/BIOS设备相关限制”一节）；
 - 英特尔硬件（CPU和GPU），从第1代“Nehalem”架构开始（即第一代Core i系列处理器，参见https://en.wikipedia.org/wiki/Intel_Core ） ；
-- AMD Stoney Ridge（第7代APU，A4/A6/10-9000系列，参见 https://en.wikipedia.org/wiki/List_of_AMD_accelerated_processing_units ），仅能使用“grunt”恢复镜像（更老的处理器和最新的锐龙处理器暂不支持）；
-- Nvidia独立显卡也不受支持。
+- AMD 锐龙3000系列（CPU和GPU），使用“zork”镜像（更新的锐龙处理器暂不受支持）；
+- 仅存在Nvidia独立显卡的设备也不受支持。
 
-针对BIOS/MBR引导的特别步骤：参照下述步骤进行操作，但在解压Brunch后，请将在本branch（master）中的“mbr_support.tar.gz”也解压进同一目录。
+提醒：
+- 英特尔第1代核显不兼容高于r81的ChromeOS版本（后续更新中也许仍有可能有改变）。
+- 某些英特尔第10代酷睿CPU似乎不兼容Android容器。
+- 英特尔第11代酷睿CPU暂不受支持。
 
 特定硬件支持：
 - 传感器：采用了一个实验性的补丁来允许英特尔重力加速度传感器和光线传感器工作；
@@ -41,12 +44,24 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 目前来说：
 - “rammus”镜像推荐在第4代酷睿及更新的英特尔处理器上使用。
 - “samus”镜像推荐在第3代酷睿及更老的英特尔处理器上使用。
-- “grunt”镜像仅在你拥有AMD硬件时使用。
-
-如果你不确定使用什么恢复镜像，WesBosch的“brunch-toolkit”项目拥有一个兼容性检查，能检测你应使用的镜像：
-https://github.com/WesBosch/brunch-toolkit
+- “zork”镜像仅在你使用AMD 锐龙3000系列处理器时使用。
+- “grunt”镜像仅在你使用AMD Stoney Ridge处理器（第7代APU，即A4/A6/A10-9000系列）。
 
 ChromeOS恢复镜像可以从https://cros-updates-serving.appspot.com/ 或者 https://cros.tech/ 下载
+
+# Brunch工具包
+
+如果你不想使用下述的一系列Linux命令，由WesBosch制作的“Brunch工具包”可以让Brunch的安装和升级更为简单：
+https://github.com/WesBosch/brunch-toolkit
+
+其主要功能有（Brunch、Linux和WSL环境下可用）：
+- 检查CPU与Brunch框架的兼容性。
+- 根据硬件推荐可用镜像名称。
+- 将Brunch安装到硬盘或分区中。
+
+在Brunch框架下可用的功能：
+- 更新ChromeOS和/或Brunch。
+- 修改ChromeOS启动动画。
 
 # 安装方式
 
@@ -255,6 +270,20 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 
 此时GRUB菜单应该会出现，选择ChromeOS，几分钟后（期间Brunch框架正在为首次启动自行编译），你应该就能看到ChromeOS的欢迎界面，并可以开始使用了。
 
+## MBR/BIOS设备相关限制
+
+此Branch（master）中提供的mbr_support.tar.gz可以让你在BIOS/MBR环境下引导Brunch，但存在几个限制：
+- 仅能够在Linux下安装Brunch。
+- 不支持多系统引导。
+
+安装步骤：
+1) 在“基础硬件需求”一节中确认你的CPU/GPU是否受到支持。
+2) 确认`pv`，`tar`，`cgpt`和`sgdisk`软件包/二进制已安装。
+3) 解压Brunch安装包到你需要的目录下。
+4) 解压mbr_support.tar.gz到同一目录（若需要覆盖文件，则覆盖）。
+5) 下载ChromeOS恢复镜像并解压。
+6) 从“在U盘/SD卡/硬盘上全盘安装ChromeOS（单系统引导）”一节的第5步开始安装。
+
 # 可选步骤
 
 ## 框架选项
@@ -270,14 +299,15 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 - "rtl8723de"：若你的设备使用了rtl8723de无线网卡，则启用；
 - "rtl8812au"：若你的设备使用了rtl8812au无线网卡，则启用；
 - "rtl8821ce"：若你的设备使用了rtl8821ce无线网卡，则启用；
+- "rtl88x2bu"：若你的设备使用了rtl88x2bu无线网卡，则启用；
+- "rtl8821cu"：若你的设备使用了rtl8821cu无线网卡，则启用；
 - "rtbth"：若你的设备使用了RT3290/RT3298LE蓝牙设备，则启用；
-- "ipts"：启用K5.4内核下的Surface设备的触摸屏驱动（感谢Linux-surface团队，尤其是StollD）；
+- "ipts"：启用K5.4/5.10内核下的Surface设备的触摸屏驱动（感谢Linux-surface团队，尤其是StollD）；
 - "acpi_power_button"：若长按电源按钮不显示电源菜单，则尝试使用这个选项；
 - "alt_touchpad_config"：若触摸板存在问题，则尝试使用；
 - "alt_touchpad_config2"：另一个触摸板问题的解决方案；
 - "disable_intel_hda"：某些Chromebook需要屏蔽snd_hda_intel模块，本选项将会再次进行此操作；
 - "internal_mic_fix"：用于强制启用某些设备的内置麦克风；
-- "mbp2018"：启用基于T2安全芯片的MacBook设备的桥和SPI驱动；
 - "asus_c302"：华硕C302设备专用的固件和补丁；
 - "baytrail_chromebook"：英特尔Baytrail架构处理器Chromebook专用的音频修复；
 - "sysfs_tablet_mode"：允许从sysfs控制平板模式(使用`echo 1 | sudo tee /sys/bus/platform/devices/tablet_mode_switch.0/tablet_mode`命令来激活，或者使用0来关闭)；
@@ -290,11 +320,18 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 
 例如："cros_debug options=enable_updates,advanced_als loop.max....."将会开启这两个选项。
 
+## 修改内核版本
+
+目前，Brunch默认使用ChromiumOS内核5.4版本，因为其更为稳定。当然，它也包含了4.19和实验性的5.10内核。如果你想要尝试另一个内核，你可以在Grub命令行中将“/kernel”修改为“/kernel-4.19”或“/kernel-5.10”。
+
+警告：修改内核可能会导致你无法登陆ChromeOS账号，此时只能通过Powerwash格式化机器来修复（在登录界面按下Ctrl+Alt+Shift+R）。因此，在切换内核之前，请先确保你已经备份了所有数据。
+
 ## 内核命令行参数
 
 以下内容与上述选项不同，如果符合以下情况，请将对应内容添加至“cros_debug”之后、“options=...”之前：
 - "enforce_hyperthreading=1"：通过关闭ChromeOS的安全功能来强行开启超线程以提升性能（甚至在crositini下也是如此，会使所有CPU核心保持在最高频率，即便是空闲状态，电量消耗将严重增加）。
 - "i915.enable_fbc=0 i915.enable_psr=0"：如果你使用了crouton(5.4内核需要)。
+- "psmouse.elantech_smbus=1"：某些elantech的触摸板需要应用此修复。
 - "psmouse.synaptics_intertouch=1"：在某些触摸板上开启2指以上的手势操作。
 - "console="：在引导时不显示任何命令行文字（并不会加快启动速度）。
 - "console=vt.global_cursor_default=0 brunch_bootsplash=default"：在K5.4内核下显示一个类似于OSX或Windows的引导Logo，而非跑码界面。（并不会加快启动速度，与上一条选其一使用即可，不可重复使用）
@@ -322,6 +359,8 @@ sudo chromeos-update -r < ChromeOS所在位置 > -f < Brunch框架压缩包所�
 ```
 5. 重启ChromeOS。
 
+提示：BiteDasher制作了一个脚本文件，使你可以通过一个命令完成Brunch和ChromeOS的升级：https://github.com/BiteDasher/brcr-update
+
 ## 仅升级Brunch框架
 
 如果你使用了“enable_updates”选项并已经更新到新版ChromeOS，那么你可能需要更新Brunch框架来对应目前的ChromeOS版本。
@@ -334,7 +373,6 @@ sudo chromeos-update -f < Brunch框架压缩包所在位置 >
 ```
 4. 重启ChromeOS。
 
-*警告*：在ChromeOS的OTA更新未完成之前，请勿更新Brunch，否则有可能无法引导。
 
 ## 修改GRUB引导程序
 
