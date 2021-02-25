@@ -298,11 +298,13 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 - "rtl8723bu"：若你的设备使用了rtl8723bu无线网卡，则启用；
 - "rtl8723de"：若你的设备使用了rtl8723de无线网卡，则启用；
 - "rtl8812au"：若你的设备使用了rtl8812au无线网卡，则启用；
+- "rtl8814au"：若你的设备使用了rtl8814au无线网卡，则启用；
 - "rtl8821ce"：若你的设备使用了rtl8821ce无线网卡，则启用；
 - "rtl88x2bu"：若你的设备使用了rtl88x2bu无线网卡，则启用；
 - "rtl8821cu"：若你的设备使用了rtl8821cu无线网卡，则启用；
 - "rtbth"：若你的设备使用了RT3290/RT3298LE蓝牙设备，则启用；
 - "ipts"：启用K5.4/5.10内核下的Surface设备的触摸屏驱动（感谢Linux-surface团队，尤其是StollD）；
+- "oled_display"：若你的设备使用的是OLED显示屏，则启用（必须使用K5.10内核）；
 - "acpi_power_button"：若长按电源按钮不显示电源菜单，则尝试使用这个选项；
 - "alt_touchpad_config"：若触摸板存在问题，则尝试使用；
 - "alt_touchpad_config2"：另一个触摸板问题的解决方案；
