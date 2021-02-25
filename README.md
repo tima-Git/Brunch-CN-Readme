@@ -439,10 +439,10 @@ sudo umount /tmp/efi_part
 
 Play商店上的某些应用与通用的Chromebook设备不兼容本来就不是什么稀罕事。（译者注：ChromeOS往往运行在x86_64平台上，而Play商店上大多数应用都是基于ARM架构处理器编写的，因此经常会发生无法使用的情况）
 
-7）Surface电脑有XX功能无法使用。
+7) Surface电脑有XX功能无法使用。
 
 通常来说，由于Surface设备采用了定制硬件和专有驱动，导致其兼容性往往不如普通的设备。目前来说，你可能会遇到（包括但不限）触摸屏断触、误触、位移；摄像头无法使用；独立显卡无法使用；外设（如Surface Dial、外接显示屏等）工作不正常之类的问题。对于某些问题，可能可以通过强制使用K5.10内核来应付，但长远来看，还是必须要等待Brunch框架的后续更新。
 
-8）在ChromeOS跑码时，提示“ChromeOS was not found on any device”。
+8) 在ChromeOS跑码时，提示“ChromeOS was not found on any device”。
 
 在确保Grub、ChromeOS镜像本身的安装和配置都完全正确的前提下，出现此行提示则证明你的CPU与当前的ChromeOS镜像版本（下载时的设备代号）不兼容。请尝试换用其他设备代号的镜像，或等待可能存在的后续支持。
