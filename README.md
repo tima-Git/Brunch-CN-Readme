@@ -19,13 +19,12 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 基础硬件兼容性：
 - x86_64电脑并支持UEFI或MBR引导（使用MBR引导安装将会附带一些限制，详见“MBR/BIOS设备相关限制”一节）；
 - 英特尔酷睿i系列处理器（CPU和GPU），从第1代“Nehalem”架构开始（即第一代Core i系列处理器，参见https://en.wikipedia.org/wiki/Intel_Core ） ；
-- AMD 锐龙3000系列处理器（CPU和GPU），使用“zork”镜像（更新的锐龙处理器暂不受支持）；
+- AMD 锐龙处理器（CPU和GPU），使用“zork”镜像；
 - 仅拥有Nvidia独立显卡的设备也不受支持，即便是同时拥有核显和Nvidia独显的设备，独立显卡也无法使用（含独显的Surface Book用户请在UEFI Settings-Devices中关闭“DGPU”选项，否则无法引导）。
 
 提醒：
 - 英特尔第1代核显不兼容高于r81的ChromeOS版本（后续更新中也许仍有可能改变）。
-- 某些英特尔第10代酷睿CPU似乎不兼容Android容器。
-- 英特尔第11代酷睿CPU暂不受支持。
+- 某些英特尔第10代、11代酷睿CPU似乎不兼容arc++ Android容器（也许你可以通过Beta通道中的“hatch”恢复镜像尝试arcvm）。
 
 特定硬件支持：
 - 传感器：采用了一个实验性的补丁来允许英特尔重力加速度传感器和光线传感器工作；
@@ -46,7 +45,7 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 目前来说：
 - “rammus”镜像推荐在第4代酷睿及更新的英特尔处理器上使用。
 - “samus”镜像推荐在第3代酷睿及更老的英特尔处理器上使用。
-- “zork”镜像仅在你使用AMD 锐龙3000系列处理器时使用。
+- “zork”镜像仅在你使用AMD锐龙处理器时使用。
 - “grunt”镜像仅在你使用AMD Stoney Ridge处理器（第7代APU，即A4/A6/A10-9000系列）时使用。
 
 ChromeOS恢复镜像可以从https://cros-updates-serving.appspot.com/ 或者 https://cros.tech/ 下载
@@ -299,6 +298,7 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 - "rtl8188eu"：若你的设备使用了rtl8188eu无线网卡，则启用；
 - "rtl8723bu"：若你的设备使用了rtl8723bu无线网卡，则启用；
 - "rtl8723de"：若你的设备使用了rtl8723de无线网卡，则启用；
+- "rtl8723du"：若你的设备使用了rtl8723du无线网卡，则启用；
 - "rtl8812au"：若你的设备使用了rtl8812au无线网卡，则启用；
 - "rtl8814au"：若你的设备使用了rtl8814au无线网卡，则启用；
 - "rtl8821ce"：若你的设备使用了rtl8821ce无线网卡，则启用；
