@@ -18,13 +18,13 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 
 基础硬件兼容性：
 - x86_64电脑并支持UEFI或MBR引导（使用MBR引导安装将会附带一些限制，详见“MBR/BIOS设备相关限制”一节）；
-- 英特尔酷睿i系列处理器（CPU和GPU），从第1代“Nehalem”架构开始（即第一代Core i系列处理器，参见https://en.wikipedia.org/wiki/Intel_Core ） ；
+- 英特尔酷睿i系列处理器（CPU和GPU），从第1代“Nehalem”架构开始（即第一代Core i系列处理器，参见https://en.wikipedia.org/wiki/Intel_Core ）；
 - AMD 锐龙处理器（CPU和GPU），使用“zork”镜像；
-- 仅拥有Nvidia独立显卡的设备也不受支持，即便是同时拥有核显和Nvidia独显的设备，独立显卡也无法使用（含独显的Surface Book用户请在UEFI Settings-Devices中关闭“DGPU”选项，否则无法引导）。
+- AMD Stoney Ridge APU（即第7代A12/A10/A9/A6/A4/FX/E2-9000系列APU，参见https://en.wikipedia.org/wiki/List_of_AMD_accelerated_processing_units ）；
+- 仅拥有Nvidia独立显卡的设备不受支持，即便是同时拥有核显和Nvidia独显的设备，独立显卡也无法使用（含独显的Surface Book用户请在UEFI Settings-Devices中关闭“DGPU”选项，否则无法引导）。
 
 提醒：
 - 英特尔第1代核显不兼容高于r81的ChromeOS版本（后续更新中也许仍有可能改变）。
-- 某些英特尔第10代、11代酷睿CPU似乎不兼容arc++ Android容器（也许你可以通过Beta通道中的“hatch”恢复镜像尝试arcvm）。
 
 特定硬件支持：
 - 传感器：采用了一个实验性的补丁来允许英特尔重力加速度传感器和光线传感器工作；
@@ -43,10 +43,11 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 与使用已编译镜像（的配置和Android程序访问）的Croissant框架相反，Brunch在使用了未编译镜像的情况下，理应也能让其两者正常运行，并提供更好的硬件兼容性。
 
 目前来说：
-- “rammus”镜像推荐在第4代酷睿及更新的英特尔处理器上使用。
+- “rammus”镜像推荐在第1代-第9代英特尔酷睿处理器上使用。
+- “volteer”镜像推荐在第10代和第11代英特尔酷睿处理器上使用（第11代酷睿需要使用5.10内核，详见“修改内核版本”一节）。
 - “samus”镜像推荐在第3代酷睿及更老的英特尔处理器上使用。
-- “zork”镜像仅在你使用AMD锐龙处理器时使用。
-- “grunt”镜像仅在你使用AMD Stoney Ridge处理器（第7代APU，即A4/A6/A10-9000系列）时使用。
+- “zork”镜像仅在你使用AMD锐龙处理器时使用（4000系列锐龙处理器需要使用5.10内核，详见“修改内核版本”一节）。
+- “grunt”镜像仅在你使用AMD Stoney Ridge APU时使用。
 
 ChromeOS恢复镜像可以从https://cros-updates-serving.appspot.com/ 或者 https://cros.tech/ 下载
 
@@ -291,6 +292,7 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 
 某些选项的特定功能可以通过内核命令行来激活，但这些功能也有可能存在风险，或不适用于所有用户：
 - "enable_updates"：允许ChromeOS系统更新（请自行承担风险：ChromeOS会被升级，但Brunch框架/内核并不会。这可能会让你的ChromeOS工作不稳定甚至无法引导）；
+- "pwa"：使用它来开启Brunch PWA（然后在这里下载安装：https://sebanc.github.io/brunch-pwa/ ）；
 - "android_init_fix"：代替用的初始化，用于支持某些设备无法正确启动其中一种Android容器时进行切换；
 - "mount_internal_drives"：允许在ChromeOS下自动挂载内置硬盘的所有分区（Android媒体服务将会检测这些设备，在其结束前将会造成高CPU占用。此过程依照数据的实际情况，有可能会花费数小时不等），若分区存在卷标，则会被使用；
 - "broadcom_wl"：若你的设备存在博通无线网卡，则启用；
@@ -306,6 +308,8 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 - "rtl8821cu"：若你的设备使用了rtl8821cu无线网卡，则启用；
 - "rtbth"：若你的设备使用了RT3290/RT3298LE蓝牙设备，则启用；
 - "ipts"：启用K5.4/5.10内核下的Surface设备的触摸屏驱动（感谢Linux-surface团队，尤其是StollD）；
+- "invert_camera_order"：如果你的前后置相机切换顺序是相反的，则启用；
+- "no_camera_config"：如果你的相机完全不工作，你可以尝试使用该选项以关闭相机配置文件；
 - "oled_display"：若你的设备使用的是OLED显示屏，则启用（必须使用K5.10内核）；
 - "acpi_power_button"：若长按电源按钮不显示电源菜单，则尝试使用这个选项；
 - "alt_touchpad_config"：若触摸板存在问题，则尝试使用；
