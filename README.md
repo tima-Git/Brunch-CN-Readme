@@ -308,6 +308,7 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 - "rtl8821cu"：若你的设备使用了rtl8821cu无线网卡，则启用；
 - "rtbth"：若你的设备使用了RT3290/RT3298LE蓝牙设备，则启用；
 - "ipts"：启用K5.4/5.10内核下的Surface设备的触摸屏驱动（感谢Linux-surface团队，尤其是StollD）；
+- "goodix"：改善Goodix（汇顶科技）触摸屏支持；
 - "invert_camera_order"：如果你的前后置相机切换顺序是相反的，则启用；
 - "no_camera_config"：如果你的相机完全不工作，你可以尝试使用该选项以关闭相机配置文件；
 - "oled_display"：若你的设备使用的是OLED显示屏，则启用（必须使用K5.10内核）；
