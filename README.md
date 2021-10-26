@@ -241,7 +241,7 @@ sudo bash chromeos-install.sh -src < ChromOS恢复镜像所在位置 > -dst chro
 11. 重启电脑，并引导至U盘/SD卡内，进入Linux发行版的Live预览（无需安装）。
 12. 使用磁盘分区工具（如cgpt等）查看ChromeOS镜像所在目标分区的名称（例如/dev/sda1、/dev/nvme0n1p3等），并记下。
 13. 拔下U盘/SD卡并重启电脑，回到Windows下。
-14. 安装grub 2 win (https://sourceforge.net/projects/grub2win/) 并打开程序。
+14. 安装[Grub2win](https://sourceforge.net/projects/grub2win/)并打开程序。
 15. 点击 `Manage Boot Menu` 按钮，选择 `Add A New Entry` 。
 16. 在“Type”菜单下选择 `submenu` （亦可以使用isoboot或custom code，没有明显区别），并输入“Chrome OS”作为标题。
 17. 点击 `Edit Custom Code` 来打开一个文本编辑框。参照下列内容，对必要信息进行修改，并输入到文本框内。
@@ -280,7 +280,7 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 
 ## MBR/BIOS设备相关限制
 
-Brunch也可以在BIOS/MBR设备上安装，但需要多进行几步操作：Brunch can be installed on BIOS/MBR devices but with a limited number of methods:
+Brunch也可以在BIOS/MBR设备上安装，但需要多进行几步操作：
 - 如果你已经安装了Windows，并且希望实现ChromeOS双引导，你可以参照[此处](https://github.com/sebanc/brunch/wiki/Detailed-installation-instructions-from-Windows)。
 - 否则，master分支中的mbr_support.tar.gz文件将只能用于创建运行Brunch的U盘，或是通过以下方式进行单系统安装：
 
