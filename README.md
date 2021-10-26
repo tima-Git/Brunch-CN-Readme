@@ -14,7 +14,7 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 
 ## 硬件支持和新增的功能
 
-硬件支持高度依赖通用Linux内核中的硬件兼容性。因此，只有支持Linux的硬件才能够正常工作，并且针对你设备所使用的特定的内核命令应该能够通过GRUB引导程序（参阅“修改GRUB引导程序”一节）。
+硬件支持高度依赖通用Linux内核中的硬件兼容性。因此，只有支持Linux的硬件才能够正常工作，并且针对你设备所使用的特定的内核命令应该能够通过Grub引导程序（参阅“修改Grub引导程序”一节）。
 
 基础硬件兼容性：
 - x86_64电脑并支持UEFI或MBR引导（使用MBR引导安装将会附带一些限制，详见“MBR/BIOS设备相关限制”一节）；
@@ -43,13 +43,16 @@ Brunch框架的目的是通过ChromeOS官方的恢复镜像，创建一个通用
 与使用已编译镜像（的配置和Android程序访问）的Croissant框架相反，Brunch在使用了未编译镜像的情况下，理应也能让其两者正常运行，并提供更好的硬件兼容性。
 
 目前来说：
-- “rammus”镜像推荐在第1代-第9代英特尔酷睿处理器上使用。
-- “volteer”镜像推荐在第10代和第11代英特尔酷睿处理器上使用（第11代酷睿需要使用5.10内核，详见“修改内核版本”一节）。
-- “samus”镜像推荐在第3代酷睿及更老的英特尔处理器上使用。
-- “zork”镜像仅在你使用AMD锐龙处理器时使用（4000系列锐龙处理器需要使用5.10内核，详见“修改内核版本”一节）。
-- “grunt”镜像仅在你使用AMD Stoney Ridge APU时使用。
+### 英特尔
+* [“rammus”镜像适合在第1-第9代酷睿处理器上使用。](https://cros.tech/device/rammus)
+* [“volteer”镜像适合在第10和第11代酷睿处理器上使用。](https://cros.tech/device/volteer)
+  * [第11代（和某些第10代）酷睿处理器需要使用5.10内核](https://github.com/bbs3223474/Brunch-CN-Readme#%E4%BF%AE%E6%94%B9%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC) 
+### AMD
+* [“grunt”镜像推荐在AMD Stoney Ridge和Bristol Ridge（即第7代APU）上使用。](https://cros.tech/device/grunt)
+* [“zork”镜像推荐在AMD锐龙处理器上使用。](https://cros.tech/device/zork)
+  * [锐龙4000系列处理器需要使用5.10内核](https://github.com/bbs3223474/Brunch-CN-Readme#%E4%BF%AE%E6%94%B9%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC) 
 
-ChromeOS恢复镜像可以从https://cros-updates-serving.appspot.com/ 或者 https://cros.tech/ 下载
+ChromeOS恢复镜像可以从上述连接，或是https://cros-updates-serving.appspot.com/ 或者 https://cros.tech/ 下载
 
 # Brunch工具包
 
@@ -76,26 +79,26 @@ https://github.com/WesBosch/brunch-toolkit
 - root权限。
 - `pv`，`tar`和`cgpt`程序包/二进制。
 
-### 在U盘/SD卡/硬盘上全盘安装ChromeOS（单系统引导）
+### 在U盘/SD卡/硬盘上全盘安装ChromeOS（全盘安装/单系统引导）
 
 1. 下载ChromeOS恢复镜像并解压。
-2. 下载与ChromeOS版本对应的Brunch框架（参见Release页面）。
+2. 从[Release页面](https://github.com/sebanc/brunch/releases)下载Brunch。通常，我们推荐使用[最新版本](https://github.com/sebanc/brunch/releases/latest)。
 3. 打开终端，进入Brunch压缩包所在目录。
 4. 解压：
 ```
 tar zxvf brunch_< 版本号 >.tar.gz
 ```
-5. 查看你U盘/SD卡/硬盘的名称，例如/dev/sdX（不含“X”后的数字。必须十分小心，因为安装程序会删除该设备的所有文件）
+5. 查看你U盘/SD卡/硬盘的名称，例如/dev/sdX（不含“X”后的数字。必须十分小心，因为安装程序会删除该设备的所有文件）。你也可以使用Gparted、Gnome disks或直接执行lsblk -e7命令来查看你想要安装到的硬盘名称。
 6. 将ChromeOS安装在你的U盘/SD卡/硬盘上（请删除所有“<>”注释内容）：
 ```
 sudo bash chromeos-install.sh -src < ChromOS恢复镜像所在位置 > -dst < 你U盘/SD卡/硬盘的名称，例如/dev/sdX >
 ```
 7. 重启电脑，并引导至U盘/SD卡/硬盘（参见电脑制造商的说明）。
 8. （仅针对开启了Secure Boot安全引导的用户）若出现蓝屏并提示 "Verfification failed: (15) Access Denied"，则你需要将安全引导的密钥导入。选择“OK->Enroll key from disk->EFI-SYSTEM->brunch.der->Continue”，然后再次重启并引导。
+9. (推荐) 当Grub引导菜单出现时，选择“ChromeOS (settings)”进入，并配置brunch（参见本说明文档的“Brunch设置”一节）。配置完成后重启设备，重新引导进入U盘/SD卡。
+10. 当Grub引导菜单出现时，选择“ChromeOS”，几分钟之后（Brunch框架在首次引导时需要自我编译）你就应该能看到ChromeOS的启动界面了。
 
-此时GRUB菜单应该会出现，选择ChromeOS，几分钟后（期间Brunch框架正在为首次启动自行编译），你应该就能看到ChromeOS的欢迎界面，并可以开始使用了。
-
-### 在硬盘上双系统启动
+### 在硬盘上与Linux双系统启动
 
 ChromeOS的分区结构非常特别，从而使得它很难实现双系统引导。其中一个解决方案就是绕过这个，并将ChromeOS放置在一个磁盘镜像中，并从镜像引导。
 
@@ -108,31 +111,32 @@ ChromeOS的分区结构非常特别，从而使得它很难实现双系统引导
 ```
 tar zxvf brunch_< 版本号 >.tar.gz
 ```
-5. 将未加密的ext4或NTFS分区挂载至需要创建磁盘镜像的目录：
+5. 使用 `lsblk -e7` 来检测你想用来安装Brunch的分区名称。（如果你还没有创建分区，则需要先创建后进行此步骤）
+6. 将未加密的ext4或NTFS分区挂载至需要创建磁盘镜像的目录：
 ```
 mkdir -p ~/tmpmount
 sudo mount < 需要放置镜像的ext4或NTFS分区的名称（包含sdX后的数字） > ~/tmpmount
 ```
-6. 创建ChromeOS磁盘镜像：
+7. 创建ChromeOS磁盘镜像：
 ```
 sudo bash chromeos-install.sh -src < ChromOS恢复镜像所在位置 > -dst ~/tmpmount/chromeos.img -s < 以GB为单位，输入你希望分配给ChromeOS的容量（系统分区大约会占用10GB，其余的将作为数据分区）>
 ```
-7. 在Linux中创建一个GRUB的配置文件，用于Brunch引导：
+8. 在Linux中创建一个Grub的配置文件，用于Brunch引导：
 - 在脚本处理结束后，复制在终端中出现的grub配置信息（在两行星号之间的文字）
 - 执行 `sudo cp /etc/grub.d/40_custom /etc/grub.d/99_brunch`
-- 接下来执行 `sudo nano /etc/grub.d/99_brunch`在文件末尾粘贴grub配置信息，并保存退出nano（Ctrl+X）
+- 接下来执行 `sudo nano /etc/grub.d/99_brunch`在文件末尾粘贴Grub配置信息，并保存退出nano（Ctrl+X）
 - 最后，执行 `sudo update-grub`
-8. 卸载目标分区
+9. 卸载目标分区
 ```
 sudo umount ~/tmpmount
 ```
-9. （仅针对开启了安全引导的用户）下载本branch (master)的安全引导密钥“brunch.der”并通过以下命令合并：
+10. （仅针对开启了安全引导的用户）下载本branch (master)的安全引导密钥“brunch.der”并通过以下命令合并：
 ```
 sudo mokutil --import brunch.der
 ```
-10. 重启电脑，进入已经修改好的GRUB引导程序。
-
-此时，GRUB菜单就会出现，选择“ChromeOS (boot from disk image)”，几分钟后（期间Brunch框架正在为首次启动自行编译），你应该就能看到ChromeOS的欢迎界面，并可以开始使用了。
+11. 重启电脑。
+12. (推荐) 当Grub引导菜单出现时，选择“ChromeOS (settings)”进入，并配置brunch（参见本说明文档的“Brunch设置”一节）。配置完成后重启设备，重新引导。
+13. 当Grub引导菜单出现时，选择“ChromeOS”，几分钟之后（Brunch框架在首次引导时需要自我编译）你就应该能看到ChromeOS的启动界面了。
 
 ## 在Windows下安装ChromeOS
 
@@ -144,7 +148,7 @@ sudo mokutil --import brunch.der
 
 1. 下载ChromeOS恢复镜像并解压。
 2. 下载与ChromeOS版本对应的Brunch框架（参见Release页面）。
-3. 在Microsoft商店中安装Ubuntu WSL（参见网络教程）。
+3. 打开Windows的WSL功能，并在Microsoft商店中安装Ubuntu WSL（参见网络教程）。
 4. 运行Ubuntu WSL并安装pv、tar和cgpt依赖：
 ```
 sudo apt update && sudo apt install pv tar cgpt
@@ -165,57 +169,61 @@ sudo bash chromeos-install.sh -src < ChromOS恢复镜像所在位置 > -dst chro
 9. 使用“Rufus”（https://rufus.ie/ ）来将chromeos.img写入你的U盘/SD卡。
 10. 重启电脑，并引导至U盘/SD卡/硬盘（参见电脑制造商的说明）。
 11. （仅针对开启了Secure Boot安全引导的用户）若出现蓝屏并提示 "Verfification failed: (15) Access Denied"，则你需要将安全引导的密钥导入。选择“OK->Enroll key from disk->EFI-SYSTEM->brunch.der->Continue”，然后再次重启并引导。
-12. 此时GRUB菜单应该会出现，选择ChromeOS，几分钟后（期间Brunch框架正在为首次启动自行编译），你应该就能看到ChromeOS的欢迎界面，并可以开始使用了。
+12. (推荐) 当Grub引导菜单出现时，选择“ChromeOS (settings)”进入，并配置brunch（参见本说明文档的“Brunch设置”一节）。配置完成后重启设备，重新引导进入U盘/SD卡。
+13. 当Grub引导菜单出现时，选择“ChromeOS”，几分钟之后（Brunch框架在首次引导时需要自我编译）你就应该能看到ChromeOS的启动界面了。
 至此阶段，你的U盘/SD卡会被错误地识别为仅有14GB空间，无论实际大小是多少。请参照以下步骤修复：
-13. 在ChromeOS的桌面，按下Ctrl+Alt+F2打开一个shell进程。
-14. 以 `root` 身份登录。
-15. 执行以下命令：
+14. 在ChromeOS的桌面，按下Ctrl+Alt+F2打开一个shell进程。
+15. 以 `root` 身份登录。
+16. 执行以下命令：
 ```
-sudo resize-data
+resize-data
 ```
-16. 当提示需要重启时，重启你的设备，并再次引导进U盘/SD卡，此时你就能正常使用了。
+17. 当提示需要重启时，重启你的设备，并再次引导进U盘/SD卡，此时你就能正常使用了。
 
-### 在硬盘上双系统启动（新版教程，灵活性较低）
+### 在硬盘上与Windows双系统启动（新版教程，灵活性较低）
+
+**提示**：如果你觉得以下内容太难理解，[这里](https://github.com/sebanc/brunch/wiki/Detailed-installation-instructions-from-Windows)有一份更为详细且易懂的教程可供参考。
 
 1. 确保你拥有一个NTFS分区，可用空间至少14GB，并且没有BitLocker加密。如果没有分区，可以手动创建一个（参见网络教程）。
-2. 创建一个运行ChromeOS的U盘/SD卡并引导进入。
+2. 创建一个运行Brunch的U盘/SD卡（见前文）并引导进入。
 3. 打开ChromeOS Shell（Ctrl+Alt+T并输入 `shell`）。
-4. 将未加密的NTFS分区挂载至需要创建磁盘镜像的目录：
+4. 使用 `lsblk -e7` 来检测你想用来安装Brunch的分区名称。（如果你还没有创建分区，则需要先创建后进行此步骤）
+5. 将未加密的NTFS分区挂载至需要创建磁盘镜像的目录：
 ```
 mkdir -p ~/tmpmount
 sudo mount < 需要生成镜像的目标分区名称 > ~/tmpmount
 ```
-5. 创建ChromeOS磁盘镜像：
+6. 创建ChromeOS磁盘镜像：
 ```
 sudo bash chromeos-install -dst ~/tmpmount/chromeos.img -s < 以GB为单位，输入你希望分配给ChromeOS的容量（系统分区大约会占用10GB，其余的将作为数据分区）>
 ```
-6. 复制在终端中显示的GRUB配置信息（选中并按下Ctrl+Shift+C）。
-7. 执行 `sudo nano ~/tmpmount/chromeos.grub.txt` 命令并粘贴 (Ctrl+Shift+V粘贴，Ctrl+X退出)。
-8. 卸载目标分区：
+7. 复制在终端中显示的Grub配置信息（选中并按下Ctrl+Shift+C）。
+8. 执行 `sudo nano ~/tmpmount/chromeos.grub.txt` 命令并粘贴 (Ctrl+Shift+V粘贴，Ctrl+X退出)。
+9. 卸载目标分区：
 ```
 sudo umount ~/tmpmount
 ```
-9. 重启至Windows，安装grub 2 win (https://sourceforge.net/projects/grub2win/) 并打开程序。
-10. 点击 `Manage Boot Menu` 按钮，选择 `Add A New Entry` 。
-11. 在“Type”菜单下选择 `submenu` ，并输入“Chrome OS”作为标题。
-12. 点击 `Edit Custom Code` 来打开一个文本编辑框。打开第7步创建的chromeos.grub.txt，并将其中的内容复制到grub2win的配置文本中。
+10. 重启至Windows，安装Grub2win (https://sourceforge.net/projects/grub2win/) 并打开程序。
+11. 点击 `Manage Boot Menu` 按钮，选择 `Add A New Entry` 。
+12. 在“Type”菜单下选择 `submenu` ，并输入“Chrome OS”作为标题。
+13. 点击 `Edit Custom Code` 来打开一个文本编辑框。打开第7步创建的chromeos.grub.txt，并将其中的内容复制到grub2win的配置文本中。
 #### 删除“rmmod tpm”一行
-13. 保存文件，点击 `Ok` 和 `apply` （点击这两个按钮之前，所有配置都不会被保存）。
-14. 重要：关闭Windows的快速启动（参见网络教程）。
-15. 重启。
-16. 此时GRUB2Win引导菜单将会出现，选择Chrome OS进入，并耐心等待。
-现在你可以正常使用ChromeOS了。
+14. 保存文件，点击 `Ok` 和 `apply` （点击这两个按钮之前，所有配置都不会被保存）。
+15. 重要：关闭Windows的快速启动（参见网络教程）。
+16. 重启。
+17. (推荐) 当Grub引导菜单出现时，选择“ChromeOS (settings)”进入，并配置brunch（参见本说明文档的“Brunch设置”一节）。配置完成后重启设备，重新引导。
+18. 当Grub引导菜单出现时，选择“ChromeOS”，几分钟之后（Brunch框架在首次引导时需要自我编译）你就应该能看到ChromeOS的启动界面了。
 
-### 在硬盘上双系统启动（旧版教程，灵活性较高）
+### 在硬盘上与Windows双系统启动（旧版教程，灵活性较高）
 
 1. 下载ChromeOS恢复镜像并解压。
 2. 下载与ChromeOS版本对应的Brunch框架（参见Release页面）。
-3. 在Microsoft商店中安装Ubuntu WSL（参见网络教程）。
+3. 开启Windows的WSL功能，并在Microsoft商店中安装Ubuntu WSL（参见网络教程）。
 4. 运行Ubuntu WSL并安装pv、tar和cgpt依赖：
 ```
 sudo apt update && sudo apt install pv tar cgpt
 ```
-5. 使用 `cd` 命令进入Brunch压缩包所在目录（请根据实际情况修改以下内容）：
+5. 使用 `cd` 命令进入Brunch压缩包所在目录（请根据实际目录修改以下内容）：
 ```
 cd /mnt/c/Users/< 用户名 >/Downloads/
 ```
@@ -257,26 +265,24 @@ initrd (loop,7)/lib/firmware/amd-ucode.img (loop,7)/lib/firmware/intel-ucode.img
 21. 此时GRUB2Win引导菜单将会出现，选择Chrome OS进入，并耐心等待。
 现在你可以正常使用ChromeOS了。
 
-## 在ChromeOS下安装ChromeOS
+## 在U盘/SD卡中的Brunch下安装ChromeOS
 
 1. 引导进你U盘/SD卡的ChromeOS。
 2. 打开ChromeOS Shell (Ctrl+Alt+T并输入 `shell` )。
-3. 查看你硬盘的名称，例如/dev/sdX（不含“X”后的数字。必须十分小心，因为安装程序会删除该设备的所有文件）。
+3. 查看你硬盘的名称，例如/dev/sdX（不含“X”后的数字。必须十分小心，因为安装程序会删除该设备的所有文件）。也可以使用 `lsblk -e7` 来检测你想用来安装的分区名称。
 4. 将ChromeOS安装到硬盘上：
 ```
 sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 ```
-5. 关闭电脑，并取出U盘/SD卡。
+5. 关闭电脑，并取出U盘/SD卡。（注意：即便你从硬盘上的GRUB引导，如果你安装了Brunch的U盘/SD卡处于插入状态，initramfs也会优先从其上面引导。）
 
-注意：即便你从硬盘上的GRUB引导，如果你安装了ChromeOS的U盘/SD卡处于插入状态，initramfs也会优先从其上面引导。
-
-此时GRUB菜单应该会出现，选择ChromeOS，几分钟后（期间Brunch框架正在为首次启动自行编译），你应该就能看到ChromeOS的欢迎界面，并可以开始使用了。
+此时Grub菜单应该会出现，选择ChromeOS，几分钟后（期间Brunch框架正在为首次启动自行编译），你应该就能看到ChromeOS的欢迎界面，并可以开始使用了。
 
 ## MBR/BIOS设备相关限制
 
-此Branch（master）中提供的mbr_support.tar.gz可以让你在BIOS/MBR环境下引导Brunch，但存在几个限制：
-- 仅能够在Linux下安装Brunch。
-- 不支持多系统引导。
+Brunch也可以在BIOS/MBR设备上安装，但需要多进行几步操作：Brunch can be installed on BIOS/MBR devices but with a limited number of methods:
+- 如果你已经安装了Windows，并且希望实现ChromeOS双引导，你可以参照[此处](https://github.com/sebanc/brunch/wiki/Detailed-installation-instructions-from-Windows)。
+- 否则，master分支中的mbr_support.tar.gz文件将只能用于创建运行Brunch的U盘，或是通过以下方式进行单系统安装：
 
 安装步骤：
 1) 在“基础硬件兼容性”一节中确认你的CPU/GPU是否受到支持。
@@ -284,13 +290,16 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 3) 解压Brunch安装包到你需要的目录下。
 4) 解压mbr_support.tar.gz到同一目录（若需要覆盖文件，则覆盖）。
 5) 下载ChromeOS恢复镜像并解压。
-6) 从“在U盘/SD卡/硬盘上全盘安装ChromeOS（单系统引导）”一节的第5步开始安装。
+6) 从“在U盘/SD卡/硬盘上全盘安装ChromeOS（全盘安装/单系统引导）”一节的第5步开始安装。
 
-# 可选步骤
+# Brunch设置
+
+Brunch配置菜单可以通过Grub的“ChromeOS (settings)”引导项进入，或在ChromeOS下的crosh shell里通过 `sudo edit-brunch-config` 命令进入。
+提示：要访问crosh shell，可按下Ctrl+Alt+T，并输入 `shell` 。（译注：与Windows双引导的安装方式不支持上述方式配置，需要在Windows下打开Grub2Win才可修改）
 
 ## 框架选项
 
-某些选项的特定功能可以通过内核命令行来激活，但这些功能也有可能存在风险，或不适用于所有用户：
+某些选项的特定功能可以通过内核命令行来激活，也可通过访问Brunch配置菜单直接启用，但这些功能也有可能存在风险，或不适用于所有用户：
 - "enable_updates"：允许ChromeOS系统更新（请自行承担风险：ChromeOS会被升级，但Brunch框架/内核并不会。这可能会让你的ChromeOS工作不稳定甚至无法引导）；
 - "pwa"：使用它来开启Brunch PWA（然后在这里下载安装：https://sebanc.github.io/brunch-pwa/ ）；
 - "android_init_fix"：代替用的初始化，用于支持某些设备无法正确启动其中一种Android容器时进行切换；
@@ -298,6 +307,8 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 - "broadcom_wl"：若你的设备存在博通无线网卡，则启用；
 - "iwlwifi_backport"：若内核无法原生支持你的英特尔无线网卡，则启用；
 - "rtl8188eu"：若你的设备使用了rtl8188eu无线网卡，则启用；
+- "rtl8188fu": 若你的设备使用了rtl8188fu无线网卡，则启用；
+- "rtl8192eu": 若你的设备使用了rtl8192eu无线网卡，则启用；
 - "rtl8723bu"：若你的设备使用了rtl8723bu无线网卡，则启用；
 - "rtl8723de"：若你的设备使用了rtl8723de无线网卡，则启用；
 - "rtl8723du"：若你的设备使用了rtl8723du无线网卡，则启用；
@@ -322,7 +333,7 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 - "sysfs_tablet_mode"：允许从sysfs控制平板模式(使用`echo 1 | sudo tee /sys/bus/platform/devices/tablet_mode_switch.0/tablet_mode`命令来激活，或者使用0来关闭)；
 - "force_tablet_mode"：与上一条相同，但在开机时默认启用平板模式；
 - "suspend_s3"：关闭“挂起到空闲（S0ix）”状态，并使用S3代替；
-- "advanced_als"：ChromeOS默认的自动亮度控制非常的基础 (https://chromium.googlesource.com/chromiumos/platform2/+/master/power_manager/docs/screen_brightness.md )，此选项将开启更多自动亮度控制等级（参考自Google Pixel Slate）。
+- "advanced_als"：ChromeOS默认的自动亮度控制非常的基础 (https://chromium.googlesource.com/chromiumos/platform2/+/master/power_manager/docs/screen_brightness.md )，此选项将开启更多自动亮度控制等级（参考自Pixel Slate）。
 
 在内核命令行上添加"options=选项1,选项2,..."（没有空格）来激活它们。
 请将上述指令添加在cros_debug之后（含空格），loop.max.....之前。最后一个选项没有逗号，并与loop.max存在一个空格。
@@ -331,22 +342,39 @@ sudo chromeos-install -dst < 目标硬盘的名称，例如/dev/sdX >
 
 ## 修改内核版本
 
-目前，Brunch默认使用ChromiumOS内核5.4版本，因为其更为稳定。当然，它也包含了4.19和实验性的5.10内核。如果你想要尝试另一个内核，你可以在Grub命令行中将“/kernel”修改为“/kernel-4.19”或“/kernel-5.10”。
+通过配置菜单或手动修改Grub引导文件，你可以在多个内核间进行切换：
+- kernel 5.4：理论上最稳定的默认内核。
+- kernel 5.10：最新内核，若使用了第10代或更新的酷睿、以及第4代AMD锐龙处理器时需要启用。
+- kernel 4.19：上一代Brunch内核。
+- kernel chromebook-5.4：用于Chromebook设备的最佳内核。
+- kernel chromebook-4.4：用于兼容部分老款Chromebook的内核。
+- kernel macbook：包含不同MacBook设备专用补丁的5.10内核。
+
+译注：上述操作方式仅适用于从Grub引导菜单进入ChromeOS (settings)引导项。如果你需要从Grub配置文件里直接修改，请使用以下步骤：
+1. 打开Grub2Win或在ChromeOS命令行里输入 `sudo edit-brunch-config` （见前文）进行编辑。
+2. 找到配置文件的“/kernel”部分，将斜杠后的文字替换为你所需要的内核，所有空格均需要使用横杠代替（例如：“kernel-5.10”、“kernel-macbook”等）。
+3. 保存并退出编辑，重启电脑。
 
 警告：修改内核可能会导致你无法登陆ChromeOS账号，此时只能通过Powerwash格式化机器来修复（在登录界面按下Ctrl+Alt+Shift+R）。因此，在切换内核之前，请先确保你已经备份了所有数据。
 
 ## 内核命令行参数
 
-以下内容与上述选项不同，如果符合以下情况，请将对应内容添加至“cros_debug”之后、“options=...”之前：
+以下内容与上述选项不同，如果符合以下情况，请将对应内容添加至Grub配置文件的“cros_debug”之后、“options=...”之前（使用“ChromeOS (Settings)”进入配置菜单的无需手动寻找添加位置，直接添加即可）。
+最常见的内核命令行参数如下：
 - "enforce_hyperthreading=1"：通过关闭ChromeOS的安全功能来强行开启超线程以提升性能（甚至在crositini下也是如此，会使所有CPU核心保持在最高频率，即便是空闲状态，电量消耗将严重增加）。
 - "i915.enable_fbc=0 i915.enable_psr=0"：如果你使用了crouton(5.4内核需要)。
 - "psmouse.elantech_smbus=1"：某些elantech的触摸板需要应用此修复。
 - "psmouse.synaptics_intertouch=1"：在某些触摸板上开启2指以上的手势操作。
-- "console="：在引导时不显示任何命令行文字（并不会加快启动速度）。
-- "console=vt.global_cursor_default=0 brunch_bootsplash=default"：在K5.4内核下显示一个类似于OSX或Windows的引导Logo，而非跑码界面。（并不会加快启动速度，与上一条选其一使用即可，不可重复使用）
 
-就像这样：
+就像这样（仅针对手动编辑Grub配置文件）：
 ![](https://user-images.githubusercontent.com/69226625/97113026-9fec2880-170d-11eb-930f-972f0b38af4f.png)
+
+## 引导图像
+
+你可以通过切换此Repo的分支至你的Brunch版本，并进入“bootsplashes”文件夹，来预览到不同的引导图像。
+
+# 更新Brunch框架/ChromeOS
+
 ## 检查已安装的Brunch框架版本
 
 1. 打开ChromeOS Shell (Ctrl+Alt+T并输入 `shell` )。
@@ -381,41 +409,6 @@ sudo chromeos-update -r < ChromeOS所在位置 > -f < Brunch框架压缩包所�
 sudo chromeos-update -f < Brunch框架压缩包所在位置 >
 ```
 4. 重启ChromeOS。
-
-
-## 修改GRUB引导程序
-
-### 在Windows下修改
-
-1. 安装Notepad++ (https://notepad-plus-plus.org/)
-2. 找到EFI分区并进入efi/boot文件夹。
-3. 使用Notepad++编辑grub.cfg文件（警告：因为编码格式问题，使用系统自带的记事本或写字板程序编辑此文件会导致其无法使用，并使GRUB无法正确引导）。
-4. 在linux行内添加你所需要的内核参数。
-
-### 在Linux下修改
-
-1. 创建一个目录来挂载EFI分区：
-```
-mkdir /tmp/efi_part
-```
-2. 挂载分区12到你的EFI分区：
-```
-sudo mount /dev/< ChromeOS设备的分区12的名称 > /tmp/efi_part
-```
-3. 使用你喜欢的文本编辑器编辑/tmp/efi_part/efi/boot/grub.cfg，需要使用root权限。
-4. 卸载分区：
-```
-sudo umount /tmp/efi_part
-```
-
-### 在ChromeOS下修改
-
-1. 运行 `sudo edit-grub-config`。
-2. 这样就可以修改GRUB引导配置了。
-3. 按下Ctrl+O保存（英文字母O，请敲回车确认）。
-4. 按Ctrl+X退出。
-
-你还可以查看wiki https://github.com/sebanc/brunch/wiki
 
 
 # 常见问题
