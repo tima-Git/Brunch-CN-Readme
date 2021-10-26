@@ -344,7 +344,7 @@ Brunch配置菜单可以通过Grub的“ChromeOS (settings)”引导项进入，
 
 通过配置菜单或手动修改Grub引导文件，你可以在多个内核间进行切换：
 - kernel 5.4：理论上最稳定的默认内核。
-- kernel 5.10：最新内核，若使用了第10代或更新的酷睿、以及第4代AMD锐龙处理器时需要启用。
+- kernel 5.10：最新内核，若使用了第10代或更新的酷睿、以及AMD锐龙4000系列处理器时需要启用。
 - kernel 4.19：上一代Brunch内核。
 - kernel chromebook-5.4：用于Chromebook设备的最佳内核。
 - kernel chromebook-4.4：用于兼容部分老款Chromebook的内核。
